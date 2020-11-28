@@ -1,5 +1,5 @@
 {application, gleam_uuid,
- [{description, "UUID generation and decoding in Gleam"},
+ [{description, "Spec conformant UUID generation and decoding in Gleam"},
   {vsn, "0.1.1"},
   {registered, []},
   {applications,
