@@ -1,29 +1,22 @@
 # gleam_uuid
 
-A Gleam program
+Generate and decode UUIDs in Gleam.
 
+Supports decoding all versions of UUIDs and generating of V1, V3, V4, and V5 UUIDs.
+
+## Documentation
+https://hexdocs.pm/gleam_uuid/
 
 ## Quick start
 
-```sh
-# Build the project
-rebar3 compile
-
-# Run the eunit tests
-rebar3 eunit
-
-# Run the Erlang REPL
-rebar3 shell
+in your `rebar.config` deps section add:
+```erlang
+{gleam_uuid, "0.1.0"}
 ```
 
+in a Gleam module:
+```rust
+import gleam_uuid
 
-## Installation
-
-If [available in Hex](https://www.rebar3.org/docs/dependencies#section-declaring-dependencies)
-this package can be installed by adding `gleam_uuid` to your `rebar.config` dependencies:
-
-```erlang
-{deps, [
-    gleam_uuid
-]}.
+let my_random_uuid:String = gleam_uuid.v4_string()
 ```
