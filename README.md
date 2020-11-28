@@ -14,9 +14,16 @@ in your `rebar.config` deps section add:
 {gleam_uuid, "0.1.0"}
 ```
 
-in a Gleam module:
 ```rust
 import gleam_uuid
 
-let my_random_uuid:String = gleam_uuid.v4_string()
+// Generation
+> gleam_uuid.v4_string()
+"f7e321c7-4a4b-4287-a8b8-1ae35b5538ce"
+
+// Decoding
+> "f7e321c7-4a4b-4287-a8b8-1ae35b5538ce"
+    |> gleam_uuid.from_string()
+    |> result.map(gleam_uuid.version)
+Ok(gleam_uuid.V4)
 ```

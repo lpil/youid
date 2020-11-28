@@ -11,7 +11,15 @@
 ////
 ////    import gleam_uuid
 ////
-////    gleam_uuid.v4_string() 
+////    // Generation
+////    > gleam_uuid.v4_string()
+////    "f7e321c7-4a4b-4287-a8b8-1ae35b5538ce"
+////
+////    // Decoding
+////    > "f7e321c7-4a4b-4287-a8b8-1ae35b5538ce"
+////        |> gleam_uuid.from_string()
+////        |> result.map(gleam_uuid.version)
+////    Ok(gleam_uuid.V4)
 
 import gleam/bit_builder.{BitBuilder}
 import gleam/bit_string.{BitString}
