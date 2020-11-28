@@ -32,7 +32,6 @@ import gleam/dynamic.{Dynamic}
 import gleam/result
 
 // uuid's epoch is 15 Oct 1582, that's this many 100ns intervals until 1 Jan 1970.
-///
 const nanosec_intervals_offset = 122_192_928_000_000_000
 
 // Microseconds to nanosecond interval factor.
