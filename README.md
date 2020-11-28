@@ -13,7 +13,7 @@ https://hexdocs.pm/gleam_uuid/
 
 in your `rebar.config` deps section add:
 ```erlang
-{gleam_uuid, "0.1.1"}
+{gleam_uuid, "~> 0.1"}
 ```
 
 ```rust
