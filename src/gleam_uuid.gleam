@@ -114,7 +114,7 @@ pub fn v1() -> UUID {
 
 /// Convenience for quickly creating a time-based UUID String with default settings.
 pub fn v1_string() -> String {
-  do_v1(default_uuid1_node(), random_uuid1_clockseq())
+  v1()
   |> to_string()
 }
 
