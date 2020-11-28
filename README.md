@@ -2,7 +2,9 @@
 
 Generate and decode UUIDs in Gleam.
 
-Supports decoding all versions of UUIDs and generating of V1, V3, V4, and V5 UUIDs.
+Spec conformant UUID v1, v3, v4, and v5 generation.
+
+Spec conformant UUID decoding for all versions and variants.
 
 ## Documentation
 https://hexdocs.pm/gleam_uuid/
@@ -11,7 +13,7 @@ https://hexdocs.pm/gleam_uuid/
 
 in your `rebar.config` deps section add:
 ```erlang
-{gleam_uuid, "0.1.0"}
+{gleam_uuid, "0.1.1"}
 ```
 
 ```rust

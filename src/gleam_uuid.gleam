@@ -1,11 +1,13 @@
-//// Spec conformant UUID v1, v3-v5 generation and decoding.
+//// Spec conformant UUID v1, v3, v4, and v5 generation.
+////
+//// Spec conformant UUID decoding for all versions and variants.
 ////
 //// Spec: [https://www.ietf.org/rfc/rfc4122.txt](https://www.ietf.org/rfc/rfc4122.txt)
 ////
 //// Wikipedia: [https://en.wikipedia.org/wiki/uuid](https://en.wikipedia.org/wiki/uuid)
 ////
-//// Unless you have a specific reason otherwise, you probably want the random
-//// variant, V4.
+//// Unless you have a specific reason otherwise, you probably either want the
+//// random v4 or the time-based v1 version.
 //// 
 //// ## Quick Usage:
 ////
@@ -109,6 +111,12 @@ pub type V1ClockSeq {
 /// Create a V1 (time-based) UUID with default node and random clock sequence.
 pub fn v1() -> UUID {
   do_v1(default_uuid1_node(), random_uuid1_clockseq())
+}
+
+/// Convenience for quickly creating a time-based UUID String with default settings.
+pub fn v1_string() -> String {
+  do_v1(default_uuid1_node(), random_uuid1_clockseq())
+  |> to_string()
 }
 
 /// Create a V1 (time-based) UUID with custom node and clock sequence.
