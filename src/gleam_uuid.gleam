@@ -58,7 +58,7 @@ pub type Version {
   VUnknown
 }
 
-/// Possible UUID variants
+/// Possible UUID variants.
 /// This library only produces Rfc4122 variant UUIDs but can decode all variants
 pub type Variant {
   ReservedFuture
@@ -71,16 +71,16 @@ pub type Variant {
 pub type Format {
   /// Standad hex string with dashes
   String
-  /// Standard hex string with dashes prepended with urn:uuid:
-  Urn
   /// Hex string with no dashes
   Hex
+  /// Standard hex string with dashes prepended with "urn:uuid:"
+  Urn
 }
 
 // 
 // V1
 // 
-/// How to generate the node for a V1 UUID
+/// How to generate the node for a V1 UUID.
 pub type V1Node {
   /// Will first attempt to use the network cards MAC address, then fall back to random
   DefaultNode
@@ -92,9 +92,9 @@ pub type V1Node {
 
 /// How to generate the clock sequence for a V1 UUID
 pub type V1ClockSeq {
-  /// Clock sequence will be generated randomly.
+  /// Will be generated randomly.
   RandomClockSeq
-  /// Clock sequence will be the provided bit string, must be exactly 14 bits
+  /// Will be the provided bit string, must be exactly 14 bits.
   CustomClockSeq(BitString)
 }
 
@@ -289,7 +289,7 @@ pub fn v4() -> UUID {
   UUID(value: value)
 }
 
-/// Convenience for quickly creating a random UUID
+/// Convenience for quickly creating a random UUID String
 pub fn v4_string() -> String {
   v4()
   |> format(String)
