@@ -1,12 +1,17 @@
-//// Spec conformant UUID v1-v5 generation and decoding.
-//// https://www.ietf.org/rfc/rfc4122.txt
-//// https://en.wikipedia.org/wiki/Universally_unique_identifier
+//// Spec conformant UUID v1, v3-v5 generation and decoding.
+////
+//// Spec: [https://www.ietf.org/rfc/rfc4122.txt](https://www.ietf.org/rfc/rfc4122.txt)
+////
+//// Wikipedia: [https://en.wikipedia.org/wiki/uuid](https://en.wikipedia.org/wiki/uuid)
 ////
 //// Unless you have a specific reason otherwise, you probably want the random
 //// variant, V4.
 //// 
-//// Quick Usage:
-////  gleam_uuid.v4_string() 
+//// ## Quick Usage:
+////
+////    import gleam_uuid
+////
+////    gleam_uuid.v4_string() 
 
 import gleam/bit_builder.{BitBuilder}
 import gleam/bit_string.{BitString}
@@ -17,6 +22,7 @@ import gleam/dynamic.{Dynamic}
 import gleam/result
 
 // uuid's epoch is 15 Oct 1582, that's this many 100ns intervals until 1 Jan 1970.
+///
 const nanosec_intervals_offset = 122_192_928_000_000_000
 
 // Microseconds to nanosecond interval factor.
@@ -35,7 +41,7 @@ const v4_version = 4
 
 const v5_version = 5
 
-/// Opaque type for holding onto a UUID
+/// Opaque type for holding onto a UUID.
 /// Opaque so you know that if you have a UUID it is valid.
 pub opaque type UUID {
   UUID(value: BitString)
@@ -86,9 +92,9 @@ pub type V1Node {
 
 /// How to generate the clock sequence for a V1 UUID
 pub type V1ClockSeq {
-  /// Will generate a random clock sequence
+  /// Clock sequence will be generated randomly.
   RandomClockSeq
-  /// Will be the provided clock sequence, must be exactly 14 bits
+  /// Clock sequence will be the provided bit string, must be exactly 14 bits
   CustomClockSeq(BitString)
 }
 
@@ -157,7 +163,11 @@ fn validate_custom_node(
 fn validate_clock_seq(clock_seq: V1ClockSeq) -> Result(BitString, Nil) {
   case clock_seq {
     RandomClockSeq -> Ok(random_uuid1_clockseq())
-    CustomClockSeq(<<bs:14>>) -> Ok(<<bs:14>>)
+    CustomClockSeq(bs) ->
+      case bit_size(bs) == 14 {
+        True -> Ok(bs)
+        False -> Error(Nil)
+      }
     _ -> Error(Nil)
   }
 }
