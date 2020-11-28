@@ -1,0 +1,6 @@
+name = "gleam_uuid"
+
+[docs]
+links = [
+  { title = 'GitLab', href = 'https://gitlab.com/greggreg/gleam_uuid' }
+]
