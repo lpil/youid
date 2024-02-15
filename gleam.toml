@@ -1,6 +1,17 @@
-name = "gleam_uuid"
-
-[docs]
+name = "youid"
+version = "0.1.1"
+description = "Generate the parse UUIDs"
+licences = ["Apache-2.0"]
+repository = { type = "github", user = "lpil", repo = "youid" }
 links = [
-  { title = 'GitLab', href = 'https://gitlab.com/greggreg/gleam_uuid' }
+  { title = "Website", href = "https://gleam.run" },
+  { title = "Sponsor", href = "https://github.com/sponsors/lpil" },
 ]
+
+[dependencies]
+gleam_stdlib = "~> 0.34 or ~> 1.0"
+gleam_erlang = "~> 0.24"
+gleam_crypto = "~> 1.3"
+
+[dev-dependencies]
+gleeunit = "~> 1.0"

@@ -1,31 +1,35 @@
-# gleam_uuid
+# youid
 
-Generate and decode UUIDs in Gleam.
+Generate the parse UUIDs.
+
+[![Package Version](https://img.shields.io/hexpm/v/youid)](https://hex.pm/packages/youid)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/youid/)
+
+```sh
+gleam add youid
+```
+```gleam
+import youid/uuid
+
+pub fn main() {
+  uuid.v4_string()
+  // -> "f55f6957-534b-45a7-af22-a1591431bc1f"
+}
+```
 
 Spec conformant UUID v1, v3, v4, and v5 generation.
 
 Spec conformant UUID decoding for all versions and variants.
 
-## Documentation
-https://hexdocs.pm/gleam_uuid/
+Spec: [https://www.ietf.org/rfc/rfc4122.txt](https://www.ietf.org/rfc/rfc4122.txt)
 
-## Quick start
+Wikipedia: [https://en.wikipedia.org/wiki/uuid](https://en.wikipedia.org/wiki/uuid)
 
-in your `rebar.config` deps section add:
-```erlang
-{gleam_uuid, "~> 0.1"}
-```
+Unless you have a specific reason otherwise, you probably either want the
+random v4 or the time-based v1 version.
 
-```rust
-import gleam_uuid
+Further documentation can be found at <https://hexdocs.pm/youid>.
 
-// Generation
-> gleam_uuid.v4_string()
-"f7e321c7-4a4b-4287-a8b8-1ae35b5538ce"
+Many thanks to Gregggreg for [the original version][original] of this library.
 
-// Decoding
-> "f7e321c7-4a4b-4287-a8b8-1ae35b5538ce"
-    |> gleam_uuid.from_string()
-    |> result.map(gleam_uuid.version)
-Ok(gleam_uuid.V4)
-```
+[original]: https://gitlab.com/greggreg/gleam_uuid
