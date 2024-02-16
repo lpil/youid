@@ -1,6 +1,6 @@
 # youid
 
-Generate the parse UUIDs.
+Generate and parse UUIDs.
 
 [![Package Version](https://img.shields.io/hexpm/v/youid)](https://hex.pm/packages/youid)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/youid/)

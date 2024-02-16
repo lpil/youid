@@ -1,6 +1,6 @@
 name = "youid"
 version = "1.0.0"
-description = "Generate the parse UUIDs"
+description = "Generate and parse UUIDs"
 licences = ["Apache-2.0"]
 repository = { type = "github", user = "lpil", repo = "youid" }
 links = [
