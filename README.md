@@ -28,6 +28,9 @@ Wikipedia: [https://en.wikipedia.org/wiki/uuid](https://en.wikipedia.org/wiki/uu
 Unless you have a specific reason otherwise, you probably either want the
 random v4 or the time-based v1 version.
 
+Currently this library only works on the Erlang target as the JavaScript target
+does not yet support non-byte aligned bit arrays.
+
 Further documentation can be found at <https://hexdocs.pm/youid>.
 
 Many thanks to Gregggreg for [the original version][original] of this library.
