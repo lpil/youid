@@ -19,7 +19,7 @@ pub fn main() {
 
 Spec conformant UUID v1, v3, v4, and v5 generation.
 
-Spec conformant UUID decoding for all versions and variants.
+Spec conformant UUID decoding for v1, v2, v3, v4, and v5.
 
 Spec: [https://www.ietf.org/rfc/rfc4122.txt](https://www.ietf.org/rfc/rfc4122.txt)
 
