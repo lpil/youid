@@ -1,6 +1,8 @@
 import youid/uuid
+import youid/id.{type Id, type IdGenerator}
 import gleeunit/should
 import gleeunit
+import gleam/string
 
 pub fn main() {
   gleeunit.main()
@@ -129,4 +131,30 @@ pub fn v5_dns_namespace_test() {
 pub fn v5_dont_crash_on_bad_name_test() {
   uuid.v5(uuid.dns_uuid(), <<1:1>>)
   |> should.equal(Error(Nil))
+}
+
+//
+// Id tests
+//
+
+pub type User
+
+pub fn new_user_id() -> Id(User) {
+  id.format(prefixed_with: "orgname-user")()
+}
+
+pub fn id_usage_test() {
+  let user_1 = new_user_id()
+
+  user_1
+  |> id.to_string
+  |> string.starts_with("orgname-user-")
+  |> should.equal(True)
+
+  let backing_id =
+    user_1
+    |> id.to_string
+    |> string.drop_left(13)
+  uuid.from_string(backing_id)
+  |> should.be_ok
 }
