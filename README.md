@@ -21,7 +21,11 @@ Spec conformant UUID v1, v3, v4, and v5 generation.
 
 Spec conformant UUID decoding for v1, v2, v3, v4, and v5.
 
+Draft spec conformant UUID v7 generation and decoding.
+
 Spec: [https://www.ietf.org/rfc/rfc4122.txt](https://www.ietf.org/rfc/rfc4122.txt)
+
+Version 7 draft spec: [https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-04.html#name-uuid-version-7](https://www.ietf.org/archive/id/draft-peabody-dispatch-new-uuid-format-04.html#name-uuid-version-7)
 
 Wikipedia: [https://en.wikipedia.org/wiki/uuid](https://en.wikipedia.org/wiki/uuid)
 

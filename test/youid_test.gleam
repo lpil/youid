@@ -22,6 +22,13 @@ pub fn v4_from_string_test() {
   |> should.equal(uuid.V4)
 }
 
+pub fn v7_from_string_test() {
+  let assert Ok(uuid) = uuid.from_string("018ed16d-0f82-7d38-a8ad-31f11b97d10c")
+  uuid
+  |> uuid.version
+  |> should.equal(uuid.V7)
+}
+
 pub fn unknown_version_test() {
   let assert Ok(uuid) = uuid.from_string("16b53fc5-f9a7-0f6b-8180-399ab0986250")
   uuid
@@ -303,4 +310,28 @@ pub fn v5_from_bit_array_test() {
   |> uuid.from_bit_array()
   |> should.be_ok()
   |> should.equal(uuid)
+}
+
+//
+// V7 Tests
+//
+pub fn v7_custom_timestamp_test() {
+  let uuid = uuid.custom_v7(1_712_910_566)
+  uuid.time_posix_millisecond(uuid)
+  |> should.equal(1_712_910_566)
+}
+
+pub fn v7_can_validate_self_test() {
+  let assert Ok(uuid) =
+    uuid.v7()
+    |> uuid.to_string()
+    |> uuid.from_string()
+
+  uuid
+  |> uuid.version
+  |> should.equal(uuid.V7)
+
+  uuid
+  |> uuid.variant
+  |> should.equal(uuid.Rfc4122)
 }

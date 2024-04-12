@@ -34,6 +34,8 @@ const v4_version = 4
 
 const v5_version = 5
 
+const v7_version = 7
+
 /// Opaque type for holding onto a UUID.
 /// Opaque so you know that if you have a UUID it is valid.
 pub opaque type Uuid {
@@ -41,13 +43,14 @@ pub opaque type Uuid {
 }
 
 /// Possible UUID versions.
-/// This library only creates V1, V3, V4 and V5 UUIDs but can decode all versions
+/// This library only creates V1, V3, V4, V5, and V7 UUIDs but can decode all versions
 pub type Version {
   V1
   V2
   V3
   V4
   V5
+  V7
   VUnknown
 }
 
@@ -289,6 +292,31 @@ fn sha1(data: BitArray) -> BitArray {
 }
 
 //
+// V7
+//
+/// Generates a version 7 (timestamp-based) UUID.
+pub fn v7() -> Uuid {
+  let ms = system_time(1000)
+  custom_v7(ms)
+}
+
+/// Creates a version 7 UUID from a specific timestamp.
+/// Integer should be milliseconds from UNIX epoch.
+pub fn custom_v7(timestamp: Int) -> Uuid {
+  let assert <<a:size(12), b:size(62), _:size(6)>> =
+    crypto.strong_random_bytes(10)
+  let value = <<timestamp:48, v7_version:4, a:12, rfc_variant:2, b:62>>
+  Uuid(value: value)
+}
+
+/// Convenience function for quickly creating a timestamp-based
+/// version 7 UUID
+pub fn v7_string() -> String {
+  v7()
+  |> format(String)
+}
+
+//
 // More public interface
 //
 /// Determine the Version of a UUID
@@ -349,6 +377,14 @@ pub fn node(uuid: Uuid) -> String {
   [a, b, c, d, e, f, g, h, i, j, k, l]
   |> list.map(int.to_base16)
   |> string.concat()
+}
+
+/// Determine the time a UUID was created with Unix Epoch
+/// This is only relevant to a V7 UUID
+/// Value is the number of milliseconds since Unix Epoch
+pub fn time_posix_millisecond(uuid: Uuid) -> Int {
+  let assert <<t:48, _:80>> = uuid.value
+  t
 }
 
 /// Convert a UUID to a standard string
@@ -479,6 +515,7 @@ fn decode_version(int: Int) -> Version {
     3 -> V3
     4 -> V4
     5 -> V5
+    7 -> V7
     _ -> VUnknown
   }
 }
@@ -526,6 +563,9 @@ fn mac_address() -> Result(BitArray, Nil)
 
 @external(erlang, "os", "timestamp")
 fn os_timestamp() -> #(Int, Int, Int)
+
+@external(erlang, "os", "system_time")
+fn system_time(second_division: Int) -> Int
 
 // TODO: add this to the stdlib
 @external(erlang, "erlang", "bit_size")
