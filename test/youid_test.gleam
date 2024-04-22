@@ -1,4 +1,6 @@
 import gleam/bit_array
+import gleam/erlang/process
+import gleam/list
 import gleam/string
 import gleeunit
 import gleeunit/should
@@ -334,4 +336,17 @@ pub fn v7_can_validate_self_test() {
   uuid
   |> uuid.variant
   |> should.equal(uuid.Rfc4122)
+}
+
+pub fn v7_generation_sequence_test() {
+  let ids =
+    list.range(0, 1000)
+    |> list.map(fn(_) {
+      process.sleep(1)
+      uuid.v7_string()
+    })
+  let sorted = list.sort(ids, string.compare)
+
+  sorted
+  |> should.equal(ids)
 }
