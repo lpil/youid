@@ -9,10 +9,10 @@
 //// Unless you have a specific reason otherwise, you probably either want the
 //// random v4 or the time-based v1 version.
 
+import gleam/crypto
 import gleam/int
 import gleam/list
 import gleam/string
-import gleam/crypto
 
 // uuid's epoch is 15 Oct 1582, that's this many 100ns intervals until 1 Jan 1970.
 const nanosec_intervals_offset = 122_192_928_000_000_000
@@ -377,8 +377,10 @@ fn to_string_help(
   separator: String,
 ) -> String {
   case position {
-    8 | 13 | 18 | 23 ->
-      to_string_help(ints, position + 1, acc <> separator, separator)
+    8
+    | 13
+    | 18
+    | 23 -> to_string_help(ints, position + 1, acc <> separator, separator)
     _ ->
       case ints {
         <<i:size(4), rest:bits>> -> {
@@ -398,7 +400,7 @@ pub fn from_string(in: String) -> Result(Uuid, Nil) {
     _ -> in
   }
 
-  case to_bit_array(hex) {
+  case to_bit_array_helper(hex) {
     Ok(bits) -> Ok(Uuid(value: bits))
     Error(_) -> Error(Nil)
   }
@@ -427,10 +429,15 @@ pub fn x500_uuid() -> Uuid {
   Uuid(value: <<143_098_242_721_090_011_660_934_971_687_007_695_048:128>>)
 }
 
+/// Convert a UUID to a bit array
+pub fn to_bit_array(uuid: Uuid) -> BitArray {
+  uuid.value
+}
+
 //
 // helpers
 //
-fn to_bit_array(str: String) -> Result(BitArray, Nil) {
+fn to_bit_array_helper(str: String) -> Result(BitArray, Nil) {
   to_bitstring_help(str, 0, <<>>)
 }
 
