@@ -1,6 +1,8 @@
-import youid/uuid
-import gleeunit/should
+import gleam/bit_array
+import gleam/string
 import gleeunit
+import gleeunit/should
+import youid/uuid
 
 pub fn main() {
   gleeunit.main()
@@ -84,6 +86,30 @@ pub fn v1_custom_node_and_clock_seq() {
   |> should.equal(clock_seq)
 }
 
+pub fn v1_to_bit_array_length_test() {
+  let uuid = uuid.v1()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> bit_array.byte_size()
+  |> should.equal(16)
+}
+
+pub fn v1_to_bit_array_correctness_test() {
+  let uuid = uuid.v1()
+
+  let uuid_from_string =
+    uuid
+    |> uuid.to_string()
+    |> string.replace("-", "")
+    |> bit_array.base16_decode()
+    |> should.be_ok()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> should.equal(uuid_from_string)
+}
+
 //
 // V3 Tests
 //
@@ -96,6 +122,34 @@ pub fn v3_dns_namespace_test() {
 pub fn v3_dont_crash_on_bad_name_test() {
   uuid.v5(uuid.dns_uuid(), <<1:1>>)
   |> should.equal(Error(Nil))
+}
+
+pub fn v3_to_bit_array_length_test() {
+  let uuid =
+    uuid.v3(uuid.dns_uuid(), <<"my.domain.com":utf8>>)
+    |> should.be_ok()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> bit_array.byte_size()
+  |> should.equal(16)
+}
+
+pub fn v3_to_bit_array_correctness_test() {
+  let uuid =
+    uuid.v3(uuid.dns_uuid(), <<"my.domain.com":utf8>>)
+    |> should.be_ok()
+
+  let uuid_from_string =
+    uuid
+    |> uuid.to_string()
+    |> string.replace("-", "")
+    |> bit_array.base16_decode()
+    |> should.be_ok()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> should.equal(uuid_from_string)
 }
 
 //
@@ -116,6 +170,30 @@ pub fn v4_can_validate_self_test() {
   |> should.equal(uuid.Rfc4122)
 }
 
+pub fn v4_to_bit_array_length_test() {
+  let uuid = uuid.v4()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> bit_array.byte_size()
+  |> should.equal(16)
+}
+
+pub fn v4_to_bit_array_correctness_test() {
+  let uuid = uuid.v4()
+
+  let uuid_from_string =
+    uuid
+    |> uuid.to_string()
+    |> string.replace("-", "")
+    |> bit_array.base16_decode()
+    |> should.be_ok()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> should.equal(uuid_from_string)
+}
+
 //
 // V5 Tests
 //
@@ -129,4 +207,32 @@ pub fn v5_dns_namespace_test() {
 pub fn v5_dont_crash_on_bad_name_test() {
   uuid.v5(uuid.dns_uuid(), <<1:1>>)
   |> should.equal(Error(Nil))
+}
+
+pub fn v5_to_bit_array_length_test() {
+  let uuid =
+    uuid.v5(uuid.dns_uuid(), <<"my.domain.com":utf8>>)
+    |> should.be_ok()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> bit_array.byte_size()
+  |> should.equal(16)
+}
+
+pub fn v5_to_bit_array_correctness_test() {
+  let uuid =
+    uuid.v5(uuid.dns_uuid(), <<"my.domain.com":utf8>>)
+    |> should.be_ok()
+
+  let uuid_from_string =
+    uuid
+    |> uuid.to_string()
+    |> string.replace("-", "")
+    |> bit_array.base16_decode()
+    |> should.be_ok()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> should.equal(uuid_from_string)
 }
