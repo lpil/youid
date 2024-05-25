@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.1 - 2024-05-25
+
+- Added to_bit_array()
+
 ## v1.0.0 - 2024-02-16
 
 - Forked from `gleam_uuid`.
