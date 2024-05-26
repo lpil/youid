@@ -1,8 +1,8 @@
 # Changelog
 
-## v1.0.1 - 2024-05-25
+## v1.0.1 - 2024-05-26
 
-- Added to_bit_array()
+- Added to_bit_array() and from_bit_array()
 
 ## v1.0.0 - 2024-02-16
 

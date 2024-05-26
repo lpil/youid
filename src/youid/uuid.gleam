@@ -9,6 +9,7 @@
 //// Unless you have a specific reason otherwise, you probably either want the
 //// random v4 or the time-based v1 version.
 
+import gleam/bit_array
 import gleam/crypto
 import gleam/int
 import gleam/list
@@ -69,9 +70,9 @@ pub type Format {
   Urn
 }
 
-// 
+//
 // V1
-// 
+//
 /// How to generate the node for a V1 UUID.
 pub type V1Node {
   /// Will first attempt to use the network cards MAC address, then fall back to random
@@ -432,6 +433,19 @@ pub fn x500_uuid() -> Uuid {
 /// Convert a UUID to a bit array
 pub fn to_bit_array(uuid: Uuid) -> BitArray {
   uuid.value
+}
+
+pub fn from_bit_array(bit_array: BitArray) -> Result(Uuid, Nil) {
+  let uuid = Uuid(bit_array)
+
+  case bit_array.byte_size(bit_array) {
+    16 ->
+      case version(uuid) {
+        VUnknown -> Error(Nil)
+        _ -> Ok(uuid)
+      }
+    _ -> Error(Nil)
+  }
 }
 
 //
