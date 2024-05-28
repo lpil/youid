@@ -378,10 +378,8 @@ fn to_string_help(
   separator: String,
 ) -> String {
   case position {
-    8
-    | 13
-    | 18
-    | 23 -> to_string_help(ints, position + 1, acc <> separator, separator)
+    8 | 13 | 18 | 23 ->
+      to_string_help(ints, position + 1, acc <> separator, separator)
     _ ->
       case ints {
         <<i:size(4), rest:bits>> -> {
