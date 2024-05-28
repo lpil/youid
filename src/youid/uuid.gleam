@@ -433,6 +433,8 @@ pub fn to_bit_array(uuid: Uuid) -> BitArray {
   uuid.value
 }
 
+/// Attemts to convert a bit array to a UUID.
+/// Will fail if the bit array is not 16 bytes long or has an invalid version.
 pub fn from_bit_array(bit_array: BitArray) -> Result(Uuid, Nil) {
   let uuid = Uuid(bit_array)
 
