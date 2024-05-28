@@ -47,6 +47,30 @@ pub fn non_hex_char_test() {
   |> should.equal(Error(Nil))
 }
 
+pub fn from_bit_array_too_long_test() {
+  "16b53fc5f9a74f6b8180399ab098625000"
+  |> bit_array.base16_decode()
+  |> should.be_ok()
+  |> uuid.from_bit_array()
+  |> should.be_error()
+}
+
+pub fn from_bit_array_too_short_test() {
+  "16b53fc5f9a74f6b8180399ab09862"
+  |> bit_array.base16_decode()
+  |> should.be_ok()
+  |> uuid.from_bit_array()
+  |> should.be_error()
+}
+
+pub fn from_bit_array_invalid_version_test() {
+  "16b53fc5f9a70f6b8180399ab0986225"
+  |> bit_array.base16_decode()
+  |> should.be_ok()
+  |> uuid.from_bit_array()
+  |> should.be_error()
+}
+
 //
 // V1 Tests
 //
@@ -110,6 +134,16 @@ pub fn v1_to_bit_array_correctness_test() {
   |> should.equal(uuid_from_string)
 }
 
+pub fn v1_from_bit_array_test() {
+  let uuid = uuid.v1()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> uuid.from_bit_array()
+  |> should.be_ok()
+  |> should.equal(uuid)
+}
+
 //
 // V3 Tests
 //
@@ -150,6 +184,18 @@ pub fn v3_to_bit_array_correctness_test() {
   uuid
   |> uuid.to_bit_array()
   |> should.equal(uuid_from_string)
+}
+
+pub fn v3_from_bit_array_test() {
+  let uuid =
+    uuid.v3(uuid.dns_uuid(), <<"my.domain.com":utf8>>)
+    |> should.be_ok()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> uuid.from_bit_array()
+  |> should.be_ok()
+  |> should.equal(uuid)
 }
 
 //
@@ -194,6 +240,16 @@ pub fn v4_to_bit_array_correctness_test() {
   |> should.equal(uuid_from_string)
 }
 
+pub fn v4_from_bit_array_test() {
+  let uuid = uuid.v4()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> uuid.from_bit_array()
+  |> should.be_ok()
+  |> should.equal(uuid)
+}
+
 //
 // V5 Tests
 //
@@ -235,4 +291,16 @@ pub fn v5_to_bit_array_correctness_test() {
   uuid
   |> uuid.to_bit_array()
   |> should.equal(uuid_from_string)
+}
+
+pub fn v5_from_bit_array_test() {
+  let uuid =
+    uuid.v5(uuid.dns_uuid(), <<"my.domain.com":utf8>>)
+    |> should.be_ok()
+
+  uuid
+  |> uuid.to_bit_array()
+  |> uuid.from_bit_array()
+  |> should.be_ok()
+  |> should.equal(uuid)
 }
