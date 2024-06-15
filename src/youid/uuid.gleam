@@ -343,10 +343,16 @@ pub fn time(uuid: Uuid) -> Int {
 }
 
 /// Determine the time a UUID was created with Unix Epoch
-/// This is only relevant to a V1 UUID
+/// This is only relevant to V1 and V7 UUIDs
 /// Value is the number of micro seconds since Unix Epoch
 pub fn time_posix_microsec(uuid: Uuid) -> Int {
-  { time(uuid) - nanosec_intervals_offset } / nanosec_intervals_factor
+  case version(uuid) {
+    V7 -> {
+      let assert <<t:48, _:80>> = uuid.value
+      t * 1000
+    }
+    _ -> { time(uuid) - nanosec_intervals_offset } / nanosec_intervals_factor
+  }
 }
 
 /// Determine the clock sequence of a UUID
@@ -380,11 +386,18 @@ pub fn node(uuid: Uuid) -> String {
 }
 
 /// Determine the time a UUID was created with Unix Epoch
-/// This is only relevant to a V7 UUID
-/// Value is the number of milliseconds since Unix Epoch
-pub fn time_posix_millisecond(uuid: Uuid) -> Int {
-  let assert <<t:48, _:80>> = uuid.value
-  t
+/// This is only relevant to V1 and V7 UUIDs
+/// Value is the number of milli seconds since Unix Epoch
+pub fn time_posix_millisec(uuid: Uuid) -> Int {
+  case version(uuid) {
+    V1 ->
+      { { time(uuid) - nanosec_intervals_offset } / nanosec_intervals_factor }
+      / 1000
+    _ -> {
+      let assert <<t:48, _:80>> = uuid.value
+      t
+    }
+  }
 }
 
 /// Convert a UUID to a standard string
