@@ -153,6 +153,18 @@ pub fn v1_from_bit_array_test() {
   |> should.equal(uuid)
 }
 
+pub fn v1_posix_time_test() {
+  let assert Ok(uuid) = uuid.from_string("49cac37c-310b-11eb-adc1-0242ac120002")
+
+  uuid
+  |> uuid.time_posix_microsec()
+  |> should.equal(1_606_521_011_735_846)
+
+  uuid
+  |> uuid.time_posix_millisec()
+  |> should.equal(1_606_521_011_735)
+}
+
 //
 // V3 Tests
 //
@@ -319,8 +331,12 @@ pub fn v5_from_bit_array_test() {
 //
 pub fn v7_custom_timestamp_test() {
   let uuid = uuid.custom_v7(1_712_910_566)
-  uuid.time_posix_millisecond(uuid)
+
+  uuid.time_posix_millisec(uuid)
   |> should.equal(1_712_910_566)
+
+  uuid.time_posix_microsec(uuid)
+  |> should.equal(1_712_910_566_000)
 }
 
 pub fn v7_can_validate_self_test() {
