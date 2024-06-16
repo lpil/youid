@@ -329,8 +329,8 @@ pub fn v5_from_bit_array_test() {
 //
 // V7 Tests
 //
-pub fn v7_custom_timestamp_test() {
-  let uuid = uuid.custom_v7(1_712_910_566)
+pub fn v7_from_millisec_timestamp_test() {
+  let uuid = uuid.v7_from_millisec(1_712_910_566)
 
   uuid.time_posix_millisec(uuid)
   |> should.equal(1_712_910_566)

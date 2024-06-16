@@ -297,12 +297,12 @@ fn sha1(data: BitArray) -> BitArray {
 /// Generates a version 7 (timestamp-based) UUID.
 pub fn v7() -> Uuid {
   let ms = system_time(1000)
-  custom_v7(ms)
+  v7_from_millisec(ms)
 }
 
-/// Creates a version 7 UUID from a specific timestamp.
+/// Creates a version 7 UUID from a specific UNIX timestamp.
 /// Integer should be milliseconds from UNIX epoch.
-pub fn custom_v7(timestamp: Int) -> Uuid {
+pub fn v7_from_millisec(timestamp: Int) -> Uuid {
   let assert <<a:size(12), b:size(62), _:size(6)>> =
     crypto.strong_random_bytes(10)
   let value = <<timestamp:48, v7_version:4, a:12, rfc_variant:2, b:62>>
@@ -331,20 +331,24 @@ pub fn variant(uuid: Uuid) -> Variant {
   decode_variant(<<var:3>>)
 }
 
-/// Determine the time a UUID was created with Gregorian Epoch
-/// This is only relevant to a V1 UUID
+/// Determine the time a UUID was created with Gregorian Epoch.
+///
+/// This is only relevant to a V1 UUID.
+///
 /// UUID's use 15 Oct 1582 as Epoch and time is measured in 100ns intervals.
 /// This value is useful for comparing V1 UUIDs but not so much for
-/// telling what time a UUID was created. See time_posix_microsec and clock_sequence
+/// telling what time a UUID was created. See time_posix_microsec and clock_sequence.
 pub fn time(uuid: Uuid) -> Int {
   let assert <<t_low:32, t_mid:16, _:4, t_hi:12, _:64>> = uuid.value
   let assert <<t:60>> = <<t_hi:12, t_mid:16, t_low:32>>
   t
 }
 
-/// Determine the time a UUID was created with Unix Epoch
-/// This is only relevant to V1 and V7 UUIDs
-/// Value is the number of micro seconds since Unix Epoch
+/// Determine the time a UUID was created with.
+///
+/// This is only relevant to V1 and V7 UUIDs.
+///
+/// Value is the number of micro seconds since Unix Epoch.
 pub fn time_posix_microsec(uuid: Uuid) -> Int {
   case version(uuid) {
     V7 -> {
