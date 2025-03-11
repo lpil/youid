@@ -492,22 +492,30 @@ pub fn from_string(in: String) -> Result(Uuid, Nil) {
 //
 /// dns namespace UUID provided by the spec, only useful for v3 and v5
 pub fn dns_uuid() -> Uuid {
-  Uuid(value: <<143_098_242_404_177_361_603_877_621_312_831_893_704:128>>)
+  Uuid(value: <<
+    107, 167, 184, 16, 157, 173, 17, 209, 128, 180, 0, 192, 79, 212, 48, 200,
+  >>)
 }
 
 /// url namespace UUID provided by the spec, only useful for v3 and v5
 pub fn url_uuid() -> Uuid {
-  Uuid(value: <<143_098_242_483_405_524_118_141_958_906_375_844_040:128>>)
+  Uuid(value: <<
+    107, 167, 184, 17, 157, 173, 17, 209, 128, 180, 0, 192, 79, 212, 48, 200,
+  >>)
 }
 
 /// oid namespace UUID provided by the spec, only useful for v3 and v5
 pub fn oid_uuid() -> Uuid {
-  Uuid(value: <<143_098_242_562_633_686_632_406_296_499_919_794_376:128>>)
+  Uuid(value: <<
+    107, 167, 184, 18, 157, 173, 17, 209, 128, 180, 0, 192, 79, 212, 48, 200,
+  >>)
 }
 
 /// x500 namespace UUID provided by the spec, only useful for v3 and v5
 pub fn x500_uuid() -> Uuid {
-  Uuid(value: <<143_098_242_721_090_011_660_934_971_687_007_695_048:128>>)
+  Uuid(value: <<
+    107, 167, 184, 19, 157, 173, 17, 209, 128, 180, 0, 192, 79, 212, 48, 200,
+  >>)
 }
 
 /// Convert a UUID to a bit array
