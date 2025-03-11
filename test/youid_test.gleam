@@ -195,6 +195,7 @@ pub fn v1_posix_time_test() {
   |> should.equal(1_606_521_011_735)
 }
 
+// there is no equivalent to process.sleep for js
 @target(erlang)
 pub fn v1_generation_sequence_test() {
   let ids =
@@ -398,6 +399,7 @@ pub fn v7_can_validate_self_test() {
   |> should.equal(uuid.Rfc4122)
 }
 
+// there is no equivalent to process.sleep for js
 @target(erlang)
 pub fn v7_generation_sequence_test() {
   let ids =
