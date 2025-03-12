@@ -291,8 +291,9 @@ pub fn v5(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
 }
 
 fn sha1(data: BitArray) -> BitArray {
-  let assert <<sha:128, _:32>> = crypto.hash(crypto.Sha1, data)
-  <<sha:128>>
+  let hash = crypto.hash(crypto.Sha1, data)
+  let assert Ok(sha) = bit_array.slice(hash, 0, 16)
+  sha
 }
 
 //
