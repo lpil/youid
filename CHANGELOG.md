@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.5.1 - 2025-07-02
+
+- Added support for the JavaScript target
+
 ## v1.5.0 - 2025-05-14
 
 - Dependency requirements updated.
