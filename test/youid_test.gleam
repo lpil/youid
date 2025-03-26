@@ -17,6 +17,13 @@ pub fn v1_from_string_test() {
   |> should.equal(uuid.V1)
 }
 
+pub fn v1_from_string_upper_test() {
+  let assert Ok(uuid) = uuid.from_string("49CAC37C-310B-11EB-ADC1-0242AC120002")
+  uuid
+  |> uuid.version
+  |> should.equal(uuid.V1)
+}
+
 pub fn v4_from_string_test() {
   let assert Ok(uuid) = uuid.from_string("16b53fc5-f9a7-4f6b-8180-399ab0986250")
   uuid
@@ -24,8 +31,22 @@ pub fn v4_from_string_test() {
   |> should.equal(uuid.V4)
 }
 
+pub fn v4_from_string_upper_test() {
+  let assert Ok(uuid) = uuid.from_string("16B53FC5-F9A7-4F6B-8180-399AB0986250")
+  uuid
+  |> uuid.version
+  |> should.equal(uuid.V4)
+}
+
 pub fn v7_from_string_test() {
   let assert Ok(uuid) = uuid.from_string("018ed16d-0f82-7d38-a8ad-31f11b97d10c")
+  uuid
+  |> uuid.version
+  |> should.equal(uuid.V7)
+}
+
+pub fn v7_from_string_upper_test() {
+  let assert Ok(uuid) = uuid.from_string("018ED16D-0F82-7D38-A8AD-31F11B97D10C")
   uuid
   |> uuid.version
   |> should.equal(uuid.V7)
@@ -87,6 +108,15 @@ pub fn v1_roundtrip_test() {
   let uuid = uuid.v1()
   uuid
   |> uuid.to_string()
+  |> uuid.from_string()
+  |> should.equal(Ok(uuid))
+}
+
+pub fn v1_case_test() {
+  let uuid = uuid.v1()
+  uuid
+  |> uuid.to_string()
+  |> string.uppercase()
   |> uuid.from_string()
   |> should.equal(Ok(uuid))
 }
@@ -171,7 +201,7 @@ pub fn v1_posix_time_test() {
 pub fn v3_dns_namespace_test() {
   let assert Ok(uuid) = uuid.v3(uuid.dns_uuid(), <<"my.domain.com":utf8>>)
   uuid.to_string(uuid)
-  |> should.equal("03BF0706-B7E9-33B8-AEE5-C6142A816478")
+  |> should.equal("03bf0706-b7e9-33b8-aee5-c6142a816478")
 }
 
 pub fn v3_dont_crash_on_bad_name_test() {
@@ -278,7 +308,7 @@ pub fn v5_dns_namespace_test() {
   let assert Ok(uuid) = uuid.v5(uuid.dns_uuid(), <<"my.domain.com":utf8>>)
   uuid
   |> uuid.to_string
-  |> should.equal("016C25FD-70E0-56FE-9D1A-56E80FA20B82")
+  |> should.equal("016c25fd-70e0-56fe-9d1a-56e80fa20b82")
 }
 
 pub fn v5_dont_crash_on_bad_name_test() {

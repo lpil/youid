@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.3.0 - 2025-03-26
+
+- Lowercase letters are now used in the text format.
+
 ## v1.2.0 - 2024-06-16
 
 - Added support for UUIDv7 along with the `v7`, `v7_from_millisec`,

@@ -436,7 +436,8 @@ fn to_string_help(
     _ ->
       case ints {
         <<i:size(4), rest:bits>> -> {
-          to_string_help(rest, position + 1, acc <> int.to_base16(i), separator)
+          let string = int.to_base16(i) |> string.lowercase
+          to_string_help(rest, position + 1, acc <> string, separator)
         }
         _ -> acc
       }
