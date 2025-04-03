@@ -8,6 +8,7 @@ Generate and parse UUIDs.
 ```sh
 gleam add youid
 ```
+
 ```gleam
 import youid/uuid
 
@@ -27,9 +28,6 @@ Wikipedia: [https://en.wikipedia.org/wiki/uuid](https://en.wikipedia.org/wiki/uu
 
 Unless you have a specific reason otherwise, you probably either want the
 random v4 or the time-based v1 or v7 versions.
-
-Currently this library only works on the Erlang target as the JavaScript target
-does not yet support non-byte aligned bit arrays.
 
 Further documentation can be found at <https://hexdocs.pm/youid>.
 
