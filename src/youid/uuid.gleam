@@ -17,7 +17,7 @@ import gleam/string
 import gleam/time/timestamp
 
 // uuid's epoch is 15 Oct 1582, that's this many 100ns intervals until 1 Jan 1970.
-const nanosec_intervals_offset = 122_192_928_000_000_000
+const ms_intervals_offset = 122_192_928_000_000
 
 // Microseconds to nanosecond interval factor.
 const nanosec_intervals_factor = 10
@@ -175,7 +175,7 @@ fn uuid1_time() -> BitArray {
     timestamp.system_time()
     |> timestamp.to_unix_seconds_and_nanoseconds()
 
-  let time = sec * 10_000_000 + ns / 100 + nanosec_intervals_offset
+  let time = sec * 10_000_000 + ns / 100 + ms_intervals_offset * 1000
 
   <<time:size(60)>>
 }
@@ -384,7 +384,7 @@ pub fn time_posix_microsec(uuid: Uuid) -> Int {
       let assert <<t:48, _:80>> = uuid.value
       t * 1000
     }
-    _ -> { time(uuid) - nanosec_intervals_offset } / nanosec_intervals_factor
+    _ -> { time(uuid) - ms_intervals_offset * 1000 } / nanosec_intervals_factor
   }
 }
 
@@ -424,7 +424,7 @@ pub fn node(uuid: Uuid) -> String {
 pub fn time_posix_millisec(uuid: Uuid) -> Int {
   case version(uuid) {
     V1 ->
-      { { time(uuid) - nanosec_intervals_offset } / nanosec_intervals_factor }
+      { { time(uuid) - ms_intervals_offset * 1000 } / nanosec_intervals_factor }
       / 1000
     _ -> {
       let assert <<t:48, _:80>> = uuid.value
