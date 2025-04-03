@@ -317,6 +317,20 @@ pub fn v7_string() -> String {
 }
 
 //
+// Nil
+//
+/// Generates a Nil UUID.
+pub fn nil() -> Uuid {
+  Uuid(value: <<0:128>>)
+}
+
+/// Convenience for quickly creating a Nil UUID String.
+pub fn nil_string() -> String {
+  nil()
+  |> format(String)
+}
+
+//
 // More public interface
 //
 /// Determine the Version of a UUID
