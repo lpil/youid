@@ -396,3 +396,50 @@ pub fn v7_generation_sequence_test() {
   sorted
   |> should.equal(ids)
 }
+
+//
+// Nil Tests
+//
+pub fn nil_uuid_test() {
+  uuid.nil()
+  |> uuid.to_bit_array
+  |> bit_array.base16_encode
+  |> should.equal("00000000000000000000000000000000")
+}
+
+pub fn nil_uuid_string_test() {
+  uuid.nil_string()
+  |> should.equal("00000000-0000-0000-0000-000000000000")
+}
+
+// nil falls into the range of the NCS variant as per the rfc
+pub fn nil_variant_is_ncs_test() {
+  uuid.nil()
+  |> uuid.variant
+  |> should.equal(uuid.ReservedNcs)
+}
+
+// nil is a special uuid with no version as per the rfc
+pub fn nil_version_is_unknown_test() {
+  uuid.nil()
+  |> uuid.version
+  |> should.equal(uuid.VUnknown)
+}
+
+pub fn nil_roundtrip_test() {
+  let nil = uuid.nil()
+
+  nil
+  |> uuid.to_string()
+  |> uuid.from_string()
+  |> should.be_ok
+  |> should.equal(nil)
+}
+
+pub fn nil_from_string_test() {
+  let nil_str = "00000000-0000-0000-0000-000000000000"
+  let assert Ok(uuid) = uuid.from_string(nil_str)
+
+  uuid
+  |> should.equal(uuid.nil())
+}
