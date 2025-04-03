@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.0 - 2025-04-03
+
+- Added `nil` and `nil_string`.
+
 ## v1.3.0 - 2025-03-26
 
 - Lowercase letters are now used in the text format.

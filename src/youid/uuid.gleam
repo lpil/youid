@@ -319,16 +319,23 @@ pub fn v7_string() -> String {
 //
 // Nil
 //
-/// Generates a Nil UUID.
-pub fn nil() -> Uuid {
-  Uuid(value: <<0:128>>)
-}
+
+/// The Nil UUID is special form of UUID that is specified to have all 128 bits
+/// set to zero.
+/// 
+/// ```
+/// 00000000-0000-0000-0000-000000000000
+/// ```
+/// 
+/// A Nil UUID value can be useful to communicate the absence of any other UUID
+/// value in situations that otherwise require or use a 128-bit UUID. A Nil UUID
+/// can express the concept "no such value here". Thus, it is reserved for such
+/// use as needed for implementation-specific situations.
+///
+pub const nil: Uuid = Uuid(value: <<0:128>>)
 
 /// Convenience for quickly creating a Nil UUID String.
-pub fn nil_string() -> String {
-  nil()
-  |> format(String)
-}
+pub const nil_string: String = "00000000-0000-0000-0000-000000000000"
 
 //
 // More public interface
