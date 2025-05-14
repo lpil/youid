@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.5.0 - 2025-05-14
+
+- Dependency requirements updated.
+
 ## v1.4.0 - 2025-04-03
 
 - Added `nil` and `nil_string`.
