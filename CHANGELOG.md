@@ -25,10 +25,6 @@
 
 - Added `to_bit_array` and `from_bit_array`
 
-## v1.1.0 - 2024-05-29
-
-- Added `to_bit_array` and `from_bit_array`
-
 ## v1.0.0 - 2024-02-16
 
 - Forked from `gleam_uuid`.
