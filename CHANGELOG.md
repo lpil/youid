@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.6.0 - 2025-06-26
+
+- Added support for the JavaScript target
+
 ## v1.5.0 - 2025-05-14
 
 - Dependency requirements updated.
@@ -16,10 +20,6 @@
 
 - Added support for UUIDv7 along with the `v7`, `v7_from_millisec`,
   `v7_string`, and `time_posix_millisec` functions.
-
-## v1.1.0 - 2024-05-29
-
-- Added `to_bit_array` and `from_bit_array`
 
 ## v1.1.0 - 2024-05-29
 

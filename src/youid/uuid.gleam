@@ -14,9 +14,10 @@ import gleam/crypto
 import gleam/int
 import gleam/list
 import gleam/string
+import gleam/time/timestamp
 
 // uuid's epoch is 15 Oct 1582, that's this many 100ns intervals until 1 Jan 1970.
-const nanosec_intervals_offset = 122_192_928_000_000_000
+const ms_intervals_offset = 122_192_928_000_000
 
 // Microseconds to nanosecond interval factor.
 const nanosec_intervals_factor = 10
@@ -160,7 +161,7 @@ fn validate_clock_seq(clock_seq: V1ClockSeq) -> Result(BitArray, Nil) {
   case clock_seq {
     RandomClockSeq -> Ok(random_uuid1_clockseq())
     CustomClockSeq(bs) ->
-      case bit_size(bs) == 14 {
+      case bit_array.bit_size(bs) == 14 {
         True -> Ok(bs)
         False -> Error(Nil)
       }
@@ -170,10 +171,13 @@ fn validate_clock_seq(clock_seq: V1ClockSeq) -> Result(BitArray, Nil) {
 // See 4.1.4.  Timestamp in RFC 4122
 // 60 bit timestamp of 100ns intervals since 00:00:00.00, 15 October 1582
 fn uuid1_time() -> BitArray {
-  let #(mega_sec, sec, micro_sec) = os_timestamp()
-  let epoch = mega_sec * 1_000_000_000_000 + sec * 1_000_000 + micro_sec
-  let timestamp = nanosec_intervals_offset + nanosec_intervals_factor * epoch
-  <<timestamp:size(60)>>
+  let #(sec, ns) =
+    timestamp.system_time()
+    |> timestamp.to_unix_seconds_and_nanoseconds()
+
+  let time = sec * 10_000_000 + ns / 100 + ms_intervals_offset * 1000
+
+  <<time:size(60)>>
 }
 
 // Generate random clock sequence
@@ -205,7 +209,7 @@ fn random_uuid1_node() -> BitArray {
 /// Generates a version 3 (name-based, md5 hashed) UUID.
 /// Name must be a valid sequence of bytes
 pub fn v3(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
-  case bit_size(name) % 8 == 0 {
+  case bit_array.bit_size(name) % 8 == 0 {
     True ->
       <<namespace.value:bits, name:bits>>
       |> md5()
@@ -275,7 +279,7 @@ pub fn v4_string() -> String {
 /// Generates a version 5 (name-based, sha1 hashed) UUID.
 /// name must be a valid sequence of bytes
 pub fn v5(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
-  case bit_size(name) % 8 == 0 {
+  case bit_array.bit_size(name) % 8 == 0 {
     True ->
       <<namespace.value:bits, name:bits>>
       |> sha1()
@@ -287,8 +291,9 @@ pub fn v5(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
 }
 
 fn sha1(data: BitArray) -> BitArray {
-  let assert <<sha:128, _:32>> = crypto.hash(crypto.Sha1, data)
-  <<sha:128>>
+  let hash = crypto.hash(crypto.Sha1, data)
+  let assert Ok(sha) = bit_array.slice(hash, 0, 16)
+  sha
 }
 
 //
@@ -296,8 +301,11 @@ fn sha1(data: BitArray) -> BitArray {
 //
 /// Generates a version 7 (timestamp-based) UUID.
 pub fn v7() -> Uuid {
-  let ms = system_time(1000)
-  v7_from_millisec(ms)
+  let #(sec, ns) =
+    timestamp.system_time()
+    |> timestamp.to_unix_seconds_and_nanoseconds()
+
+  v7_from_millisec(sec * 1000 + ns / 1_000_000)
 }
 
 /// Creates a version 7 UUID from a specific UNIX timestamp.
@@ -376,7 +384,7 @@ pub fn time_posix_microsec(uuid: Uuid) -> Int {
       let assert <<t:48, _:80>> = uuid.value
       t * 1000
     }
-    _ -> { time(uuid) - nanosec_intervals_offset } / nanosec_intervals_factor
+    _ -> { time(uuid) - ms_intervals_offset * 1000 } / nanosec_intervals_factor
   }
 }
 
@@ -416,7 +424,7 @@ pub fn node(uuid: Uuid) -> String {
 pub fn time_posix_millisec(uuid: Uuid) -> Int {
   case version(uuid) {
     V1 ->
-      { { time(uuid) - nanosec_intervals_offset } / nanosec_intervals_factor }
+      { { time(uuid) - ms_intervals_offset * 1000 } / nanosec_intervals_factor }
       / 1000
     _ -> {
       let assert <<t:48, _:80>> = uuid.value
@@ -485,22 +493,30 @@ pub fn from_string(in: String) -> Result(Uuid, Nil) {
 //
 /// dns namespace UUID provided by the spec, only useful for v3 and v5
 pub fn dns_uuid() -> Uuid {
-  Uuid(value: <<143_098_242_404_177_361_603_877_621_312_831_893_704:128>>)
+  Uuid(value: <<
+    107, 167, 184, 16, 157, 173, 17, 209, 128, 180, 0, 192, 79, 212, 48, 200,
+  >>)
 }
 
 /// url namespace UUID provided by the spec, only useful for v3 and v5
 pub fn url_uuid() -> Uuid {
-  Uuid(value: <<143_098_242_483_405_524_118_141_958_906_375_844_040:128>>)
+  Uuid(value: <<
+    107, 167, 184, 17, 157, 173, 17, 209, 128, 180, 0, 192, 79, 212, 48, 200,
+  >>)
 }
 
 /// oid namespace UUID provided by the spec, only useful for v3 and v5
 pub fn oid_uuid() -> Uuid {
-  Uuid(value: <<143_098_242_562_633_686_632_406_296_499_919_794_376:128>>)
+  Uuid(value: <<
+    107, 167, 184, 18, 157, 173, 17, 209, 128, 180, 0, 192, 79, 212, 48, 200,
+  >>)
 }
 
 /// x500 namespace UUID provided by the spec, only useful for v3 and v5
 pub fn x500_uuid() -> Uuid {
-  Uuid(value: <<143_098_242_721_090_011_660_934_971_687_007_695_048:128>>)
+  Uuid(value: <<
+    107, 167, 184, 19, 157, 173, 17, 209, 128, 180, 0, 192, 79, 212, 48, 200,
+  >>)
 }
 
 /// Convert a UUID to a bit array
@@ -598,14 +614,6 @@ fn hex_to_int(c: String) -> Result(Int, Nil) {
 
 // Erlang Bridge
 @external(erlang, "youid_ffi", "mac_address")
-fn mac_address() -> Result(BitArray, Nil)
-
-@external(erlang, "os", "timestamp")
-fn os_timestamp() -> #(Int, Int, Int)
-
-@external(erlang, "os", "system_time")
-fn system_time(second_division: Int) -> Int
-
-// TODO: add this to the stdlib
-@external(erlang, "erlang", "bit_size")
-fn bit_size(bs: BitArray) -> Int
+fn mac_address() -> Result(BitArray, Nil) {
+  Error(Nil)
+}
