@@ -119,13 +119,8 @@ fn do_v1(node, clock_seq) -> Uuid {
   let assert <<time_hi:12, time_mid:16, time_low:32>> = uuid1_time()
   let assert <<clock_seq:14>> = clock_seq
   let value = <<
-    time_low:32,
-    time_mid:16,
-    v1_version:4,
-    time_hi:12,
-    rfc_variant:2,
-    clock_seq:14,
-    node:48,
+    time_low:32, time_mid:16, v1_version:4, time_hi:12, rfc_variant:2,
+    clock_seq:14, node:48,
   >>
 
   Uuid(value: value)
@@ -237,14 +232,8 @@ fn hash_to_uuid_value(hash: BitArray, ver: Int) -> BitArray {
   >> = hash
 
   <<
-    time_low:32,
-    time_mid:16,
-    ver:4,
-    time_hi:12,
-    rfc_variant:2,
-    clock_seq_hi:6,
-    clock_seq_low:8,
-    node:48,
+    time_low:32, time_mid:16, ver:4, time_hi:12, rfc_variant:2, clock_seq_hi:6,
+    clock_seq_low:8, node:48,
   >>
 }
 
@@ -257,11 +246,7 @@ pub fn v4() -> Uuid {
     crypto.strong_random_bytes(16)
 
   let value = <<
-    a:size(48),
-    v4_version:size(4),
-    b:size(12),
-    rfc_variant:size(2),
-    c:size(62),
+    a:size(48), v4_version:size(4), b:size(12), rfc_variant:size(2), c:size(62),
   >>
 
   Uuid(value: value)
@@ -291,9 +276,8 @@ pub fn v5(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
 }
 
 fn sha1(data: BitArray) -> BitArray {
-  let hash = crypto.hash(crypto.Sha1, data)
-  let assert Ok(sha) = bit_array.slice(hash, 0, 16)
-  sha
+  let assert <<data:bits-size(128), _:32>> = crypto.hash(crypto.Sha1, data)
+  data
 }
 
 //
@@ -612,7 +596,7 @@ fn hex_to_int(c: String) -> Result(Int, Nil) {
   }
 }
 
-// Erlang Bridge
+// It is not possible to get the mac address on JavaScript.
 @external(erlang, "youid_ffi", "mac_address")
 fn mac_address() -> Result(BitArray, Nil) {
   Error(Nil)

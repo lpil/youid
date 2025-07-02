@@ -1,6 +1,9 @@
-import gleam/bit_array
+@target(erlang)
 import gleam/erlang/process
+@target(erlang)
 import gleam/list
+
+import gleam/bit_array
 import gleam/string
 import gleeunit
 import gleeunit/should
