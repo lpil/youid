@@ -223,7 +223,7 @@ pub fn v3_dns_namespace_test() {
 }
 
 pub fn v3_dont_crash_on_bad_name_test() {
-  uuid.v5(uuid.dns_uuid(), <<1:1>>)
+  uuid.v3(uuid.dns_uuid(), <<1:1>>)
   |> should.equal(Error(Nil))
 }
 
