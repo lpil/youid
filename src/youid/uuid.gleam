@@ -10,7 +10,6 @@
 //// random v4 or the time-based v1 version.
 
 import gleam/bit_array
-import gleam/crypto
 import gleam/int
 import gleam/list
 import gleam/string
@@ -177,7 +176,7 @@ fn uuid1_time() -> BitArray {
 
 // Generate random clock sequence
 fn random_uuid1_clockseq() -> BitArray {
-  let assert <<clock_seq:size(14), _:size(2)>> = crypto.strong_random_bytes(2)
+  let assert <<clock_seq:size(14), _:size(2)>> = crypto_strong_random_bytes(2)
   <<clock_seq:size(14)>>
 }
 
@@ -194,7 +193,7 @@ fn default_uuid1_node() -> BitArray {
 
 fn random_uuid1_node() -> BitArray {
   let assert <<rnd_hi:size(7), _:size(1), rnd_low:size(40)>> =
-    crypto.strong_random_bytes(6)
+    crypto_strong_random_bytes(6)
   <<rnd_hi:size(7), 1:size(1), rnd_low:size(40)>>
 }
 
@@ -215,9 +214,10 @@ pub fn v3(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
   }
 }
 
-fn md5(data: BitArray) -> BitArray {
-  crypto.hash(crypto.Md5, data)
-}
+// gleam_crypto don't support browser
+@external(erlang, "youid_ffi", "hash_md5")
+@external(javascript, "../youid_ffi.mjs", "hashMd5")
+fn md5(data: BitArray) -> BitArray
 
 fn hash_to_uuid_value(hash: BitArray, ver: Int) -> BitArray {
   let assert <<
@@ -243,7 +243,7 @@ fn hash_to_uuid_value(hash: BitArray, ver: Int) -> BitArray {
 /// Generates a version 4 (random) UUID.
 pub fn v4() -> Uuid {
   let assert <<a:size(48), _:size(4), b:size(12), _:size(2), c:size(62)>> =
-    crypto.strong_random_bytes(16)
+    crypto_strong_random_bytes(16)
 
   let value = <<
     a:size(48), v4_version:size(4), b:size(12), rfc_variant:size(2), c:size(62),
@@ -276,9 +276,14 @@ pub fn v5(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
 }
 
 fn sha1(data: BitArray) -> BitArray {
-  let assert <<data:bits-size(128), _:32>> = crypto.hash(crypto.Sha1, data)
+  let assert <<data:bits-size(128), _:32>> = raw_sha1(data)
   data
 }
+
+// gleam_crypto don't support browser
+@external(erlang, "youid_ffi", "hash_sha1")
+@external(javascript, "../youid_ffi.mjs", "hashSha1")
+fn raw_sha1(data: BitArray) -> BitArray
 
 //
 // V7
@@ -296,7 +301,7 @@ pub fn v7() -> Uuid {
 /// Integer should be milliseconds from UNIX epoch.
 pub fn v7_from_millisec(timestamp: Int) -> Uuid {
   let assert <<a:size(12), b:size(62), _:size(6)>> =
-    crypto.strong_random_bytes(10)
+    crypto_strong_random_bytes(10)
   let value = <<timestamp:48, v7_version:4, a:12, rfc_variant:2, b:62>>
   Uuid(value: value)
 }
@@ -601,3 +606,8 @@ fn hex_to_int(c: String) -> Result(Int, Nil) {
 fn mac_address() -> Result(BitArray, Nil) {
   Error(Nil)
 }
+
+// gleam_crypto don't support browser
+@external(erlang, "crypto", "strong_rand_bytes")
+@external(javascript, "../youid_ffi.mjs", "strongRandomBytes")
+fn crypto_strong_random_bytes(a: Int) -> BitArray
