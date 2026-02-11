@@ -1,34 +1,6 @@
 import gleam/bit_array
 import gleam/int
-
-// In JavaScript bitwise operations convert numbers to a sequence of 32 bits
-// while Erlang uses arbitrary precision.
-// For hashing sha1 and md5 we want this behaviour
-// so we don't use the stdlib.
-
-@external(erlang, "erlang", "band")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_and")
-fn bitwise_and(x: Int, y: Int) -> Int
-
-@external(erlang, "erlang", "bnot")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_not")
-fn bitwise_not(x: Int) -> Int
-
-@external(erlang, "erlang", "bor")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_or")
-fn bitwise_or(x: Int, y: Int) -> Int
-
-@external(erlang, "erlang", "bxor")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_exclusive_or")
-fn bitwise_exclusive_or(x: Int, y: Int) -> Int
-
-@external(erlang, "erlang", "bsl")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_shift_left")
-fn bitwise_shift_left(x: Int, y: Int) -> Int
-
-@external(erlang, "erlang", "bsr")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_logical_shift_right")
-fn bitwise_logical_shift_right(x: Int, y: Int) -> Int
+import youid/internal/bitwise
 
 // gleam_crypto don't support browser
 // Using RFC 3174 using Method 2
@@ -309,30 +281,30 @@ fn sha1_cycle(
 
 // f(t;B,C,D) = (B AND C) OR ((NOT B) AND D) ( 0 <= t <= 19)
 fn f0(b: Int, c: Int, d: Int) -> Int {
-  bitwise_or(bitwise_and(b, c), bitwise_and(bitwise_not(b), d))
+  bitwise.or(bitwise.and(b, c), bitwise.and(bitwise.not(b), d))
 }
 
 // f(t;B,C,D) = B XOR C XOR D (20 <= t <= 39)
 fn f1(b: Int, c: Int, d: Int) -> Int {
-  bitwise_exclusive_or(b, bitwise_exclusive_or(c, d))
+  bitwise.exclusive_or(b, bitwise.exclusive_or(c, d))
 }
 
 // f(t;B,C,D) = (B AND C) OR (B AND D) OR (C AND D) (40 <= t <= 59)
 fn f2(b: Int, c: Int, d: Int) -> Int {
-  bitwise_or(
-    bitwise_or(bitwise_and(b, c), bitwise_and(b, d)),
-    bitwise_and(c, d),
+  bitwise.or(
+    bitwise.or(bitwise.and(b, c), bitwise.and(b, d)),
+    bitwise.and(c, d),
   )
 }
 
 // f(t;B,C,D) = B XOR C XOR D (60 <= t <= 79)
 fn f3(b: Int, c: Int, d: Int) -> Int {
-  bitwise_exclusive_or(b, bitwise_exclusive_or(c, d))
+  bitwise.exclusive_or(b, bitwise.exclusive_or(c, d))
 }
 
 fn xor4_rotl1(a: Int, b: Int, c: Int, d: Int) {
   left_rotate(
-    bitwise_exclusive_or(bitwise_exclusive_or(a, b), bitwise_exclusive_or(c, d)),
+    bitwise.exclusive_or(bitwise.exclusive_or(a, b), bitwise.exclusive_or(c, d)),
     1,
   )
 }
@@ -348,12 +320,12 @@ fn round(a: Int, b: Int, c: Int, d: Int, e: Int, w: Int, f: Int, k: Int) {
 }
 
 fn left_rotate(x: Int, n: Int) -> Int {
-  bitwise_and(
-    bitwise_or(bitwise_shift_left(x, n), bitwise_logical_shift_right(x, 32 - n)),
+  bitwise.and(
+    bitwise.or(bitwise.shift_left(x, n), bitwise.logical_shift_right(x, 32 - n)),
     0xFFFFFFFF,
   )
 }
 
 fn add32(a: Int, b: Int) -> Int {
-  bitwise_and(a + b, 0xFFFFFFFF)
+  bitwise.and(a + b, 0xFFFFFFFF)
 }

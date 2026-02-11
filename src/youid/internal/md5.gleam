@@ -1,34 +1,6 @@
 import gleam/bit_array
 import gleam/int
-
-// In JavaScript bitwise operations convert numbers to a sequence of 32 bits
-// while Erlang uses arbitrary precision.
-// For hashing sha1 and md5 we want this behaviour
-// so we don't use the stdlib.
-
-@external(erlang, "erlang", "band")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_and")
-fn bitwise_and(x: Int, y: Int) -> Int
-
-@external(erlang, "erlang", "bnot")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_not")
-fn bitwise_not(x: Int) -> Int
-
-@external(erlang, "erlang", "bor")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_or")
-fn bitwise_or(x: Int, y: Int) -> Int
-
-@external(erlang, "erlang", "bxor")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_exclusive_or")
-fn bitwise_exclusive_or(x: Int, y: Int) -> Int
-
-@external(erlang, "erlang", "bsl")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_shift_left")
-fn bitwise_shift_left(x: Int, y: Int) -> Int
-
-@external(erlang, "erlang", "bsr")
-@external(javascript, "../../youid_ffi.mjs", "bitwise_logical_shift_right")
-fn bitwise_logical_shift_right(x: Int, y: Int) -> Int
+import youid/internal/bitwise
 
 // gleam_crypto don't support browser
 // Based on https://www.myersdaily.org/joseph/javascript/md5-text.html
@@ -195,14 +167,14 @@ fn md5_cycle(
 fn cmn(q: Int, a: Int, b: Int, x: Int, s: Int, t: Int) -> Int {
   let a = add32(add32(a, q), add32(x, t))
   add32(
-    bitwise_or(bitwise_shift_left(a, s), bitwise_logical_shift_right(a, 32 - s)),
+    bitwise.or(bitwise.shift_left(a, s), bitwise.logical_shift_right(a, 32 - s)),
     b,
   )
 }
 
 fn ff(a: Int, b: Int, c: Int, d: Int, x: Int, s: Int, t: Int) -> Int {
   cmn(
-    bitwise_or(bitwise_and(b, c), bitwise_and(bitwise_not(b), d)),
+    bitwise.or(bitwise.and(b, c), bitwise.and(bitwise.not(b), d)),
     a,
     b,
     x,
@@ -213,7 +185,7 @@ fn ff(a: Int, b: Int, c: Int, d: Int, x: Int, s: Int, t: Int) -> Int {
 
 fn gg(a: Int, b: Int, c: Int, d: Int, x: Int, s: Int, t: Int) -> Int {
   cmn(
-    bitwise_or(bitwise_and(b, d), bitwise_and(c, bitwise_not(d))),
+    bitwise.or(bitwise.and(b, d), bitwise.and(c, bitwise.not(d))),
     a,
     b,
     x,
@@ -223,13 +195,13 @@ fn gg(a: Int, b: Int, c: Int, d: Int, x: Int, s: Int, t: Int) -> Int {
 }
 
 fn hh(a: Int, b: Int, c: Int, d: Int, x: Int, s: Int, t: Int) -> Int {
-  cmn(bitwise_exclusive_or(b, bitwise_exclusive_or(c, d)), a, b, x, s, t)
+  cmn(bitwise.exclusive_or(b, bitwise.exclusive_or(c, d)), a, b, x, s, t)
 }
 
 fn ii(a: Int, b: Int, c: Int, d: Int, x: Int, s: Int, t: Int) -> Int {
-  cmn(bitwise_exclusive_or(c, bitwise_or(b, bitwise_not(d))), a, b, x, s, t)
+  cmn(bitwise.exclusive_or(c, bitwise.or(b, bitwise.not(d))), a, b, x, s, t)
 }
 
 fn add32(a: Int, b: Int) -> Int {
-  bitwise_and(a + b, 0xFFFFFFFF)
+  bitwise.and(a + b, 0xFFFFFFFF)
 }
