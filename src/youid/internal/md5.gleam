@@ -40,17 +40,14 @@ fn process_md5_chunk(data: BitArray, sum: #(Int, Int, Int, Int)) {
       let w = {
         #(w0, w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15)
       }
-      process_md5_chunk(next, md5_cycle(sum.0, sum.1, sum.2, sum.3, w))
+      process_md5_chunk(next, md5_cycle(sum, w))
     }
     _ -> sum
   }
 }
 
 fn md5_cycle(
-  ia: Int,
-  ib: Int,
-  ic: Int,
-  id: Int,
+  i: #(Int, Int, Int, Int),
   w: #(
     Int,
     Int,
@@ -70,10 +67,10 @@ fn md5_cycle(
     Int,
   ),
 ) -> #(Int, Int, Int, Int) {
-  let a = ia
-  let b = ib
-  let c = ic
-  let d = id
+  let a = i.0
+  let b = i.1
+  let c = i.2
+  let d = i.3
 
   let a = ff(a, b, c, d, w.0, 7, 0xd76aa478)
   let d = ff(d, a, b, c, w.1, 12, 0xe8c7b756)
@@ -143,7 +140,7 @@ fn md5_cycle(
   let c = ii(c, d, a, b, w.2, 15, 0x2ad7d2bb)
   let b = ii(b, c, d, a, w.9, 21, 0xeb86d391)
 
-  #(add32(a, ia), add32(b, ib), add32(c, ic), add32(d, id))
+  #(add32(a, i.0), add32(b, i.1), add32(c, i.2), add32(d, i.3))
 }
 
 fn cmn(q: Int, a: Int, b: Int, x: Int, s: Int, t: Int) -> Int {

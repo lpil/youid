@@ -52,18 +52,14 @@ fn process_sha1_chunk(data: BitArray, sum: #(Int, Int, Int, Int, Int)) {
       let w = {
         #(w0, w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15)
       }
-      process_sha1_chunk(next, sha1_cycle(sum.0, sum.1, sum.2, sum.3, sum.4, w))
+      process_sha1_chunk(next, sha1_cycle(sum, w))
     }
     _ -> sum
   }
 }
 
 fn sha1_cycle(
-  ia: Int,
-  ib: Int,
-  ic: Int,
-  id: Int,
-  ie: Int,
+  i: #(Int, Int, Int, Int, Int),
   w: #(
     Int,
     Int,
@@ -168,7 +164,8 @@ fn sha1_cycle(
 
   // ( 0 <= t <= 19)
   let k = 0x5A827999
-  let #(a, b, c, d, e) = round(ia, ib, ic, id, ie, w0, f0(ib, ic, id), k)
+  let #(a, b, c, d, e) =
+    round(i.0, i.1, i.2, i.3, i.4, w0, f0(i.1, i.2, i.3), k)
   let #(a, b, c, d, e) = round(a, b, c, d, e, w1, f0(b, c, d), k)
   let #(a, b, c, d, e) = round(a, b, c, d, e, w2, f0(b, c, d), k)
   let #(a, b, c, d, e) = round(a, b, c, d, e, w3, f0(b, c, d), k)
@@ -258,7 +255,7 @@ fn sha1_cycle(
   let #(a, b, c, d, e) = round(a, b, c, d, e, w78, f3(b, c, d), k)
   let #(a, b, c, d, e) = round(a, b, c, d, e, w79, f3(b, c, d), k)
 
-  #(add32(a, ia), add32(b, ib), add32(c, ic), add32(d, id), add32(e, ie))
+  #(add32(a, i.0), add32(b, i.1), add32(c, i.2), add32(d, i.3), add32(e, i.4))
 }
 
 // f(t;B,C,D) = (B AND C) OR ((NOT B) AND D) ( 0 <= t <= 19)
