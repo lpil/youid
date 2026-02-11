@@ -6,8 +6,7 @@ import youid/internal/bitwise
 // Using RFC 3174 using Method 2
 pub fn sha1(data: BitArray) -> BitArray {
   let bit_size = bit_array.bit_size(data)
-  let assert Ok(number_of_zero) =
-    int.modulo(448 - { { bit_size + 1 } % 512 } + 512, 512)
+  let assert Ok(number_of_zero) = int.modulo(448 - { bit_size + 1 } % 512, 512)
   let padding = <<1:big-size(1), 0:big-size({ number_of_zero })>>
   let data = <<data:bits, padding:bits, bit_size:big-size(64)>>
 

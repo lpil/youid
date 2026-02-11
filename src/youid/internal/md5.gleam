@@ -6,8 +6,7 @@ import youid/internal/bitwise
 // Based on https://www.myersdaily.org/joseph/javascript/md5-text.html
 pub fn md5(data: BitArray) -> BitArray {
   let bit_size = bit_array.bit_size(data)
-  let assert Ok(number_of_zero) =
-    int.modulo(448 - { { bit_size + 1 } % 512 } + 512, 512)
+  let assert Ok(number_of_zero) = int.modulo(448 - { bit_size + 1 } % 512, 512)
   let padding = <<1:little-size(1), 0:little-size({ number_of_zero })>>
   let data = <<data:bits, padding:bits, bit_size:little-size(64)>>
 
