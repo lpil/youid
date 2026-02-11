@@ -8,19 +8,19 @@ import gleam/int
 
 @external(erlang, "erlang", "band")
 @external(javascript, "../../youid_ffi.mjs", "bitwise_and")
-pub fn bitwise_and(x: Int, y: Int) -> Int
+fn bitwise_and(x: Int, y: Int) -> Int
 
 @external(erlang, "erlang", "bnot")
 @external(javascript, "../../youid_ffi.mjs", "bitwise_not")
-pub fn bitwise_not(x: Int) -> Int
+fn bitwise_not(x: Int) -> Int
 
 @external(erlang, "erlang", "bor")
 @external(javascript, "../../youid_ffi.mjs", "bitwise_or")
-pub fn bitwise_or(x: Int, y: Int) -> Int
+fn bitwise_or(x: Int, y: Int) -> Int
 
 @external(erlang, "erlang", "bxor")
 @external(javascript, "../../youid_ffi.mjs", "bitwise_exclusive_or")
-pub fn bitwise_exclusive_or(x: Int, y: Int) -> Int
+fn bitwise_exclusive_or(x: Int, y: Int) -> Int
 
 @external(erlang, "erlang", "bsl")
 @external(javascript, "../../youid_ffi.mjs", "bitwise_shift_left")
