@@ -1,5 +1,5 @@
 -module(youid_ffi).
--export([mac_address/0, hash_md5/1, hash_sha1/1]).
+-export([mac_address/0]).
 
 mac_address() ->
     case inet:getifaddrs() of
@@ -21,9 +21,3 @@ mac_address(Ifs) ->
                     end
             end
     end.
-
-hash_md5(Data) when is_binary(Data) ->
-    crypto:hash(md5, Data).
-
-hash_sha1(Data) when is_binary(Data) ->
-    crypto:hash(sha, Data).
