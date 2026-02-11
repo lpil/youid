@@ -31,45 +31,28 @@ pub fn sha1(data: BitArray) -> BitArray {
 fn process_sha1_chunk(data: BitArray, sum: #(Int, Int, Int, Int, Int)) {
   case data {
     <<
-      x0:big-size(32),
-      x1:big-size(32),
-      x2:big-size(32),
-      x3:big-size(32),
-      x4:big-size(32),
-      x5:big-size(32),
-      x6:big-size(32),
-      x7:big-size(32),
-      x8:big-size(32),
-      x9:big-size(32),
-      x10:big-size(32),
-      x11:big-size(32),
-      x12:big-size(32),
-      x13:big-size(32),
-      x14:big-size(32),
-      x15:big-size(32),
-      data:bits,
+      w0:big-size(32),
+      w1:big-size(32),
+      w2:big-size(32),
+      w3:big-size(32),
+      w4:big-size(32),
+      w5:big-size(32),
+      w6:big-size(32),
+      w7:big-size(32),
+      w8:big-size(32),
+      w9:big-size(32),
+      w10:big-size(32),
+      w11:big-size(32),
+      w12:big-size(32),
+      w13:big-size(32),
+      w14:big-size(32),
+      w15:big-size(32),
+      next:bits,
     >> -> {
-      process_sha1_chunk(
-        data,
-        sha1_cycle(sum.0, sum.1, sum.2, sum.3, sum.4, #(
-          x0,
-          x1,
-          x2,
-          x3,
-          x4,
-          x5,
-          x6,
-          x7,
-          x8,
-          x9,
-          x10,
-          x11,
-          x12,
-          x13,
-          x14,
-          x15,
-        )),
-      )
+      let w = {
+        #(w0, w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14, w15)
+      }
+      process_sha1_chunk(next, sha1_cycle(sum.0, sum.1, sum.2, sum.3, sum.4, w))
     }
     _ -> sum
   }
