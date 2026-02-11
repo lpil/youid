@@ -9,6 +9,35 @@ export function strongRandomBytes(n) {
   return new BitArray(array);
 }
 
+// In JavaScript bitwise operations convert numbers to a sequence of 32 bits
+// while Erlang uses arbitrary precision.
+// For hashing sha1 and md5 we want this behaviour
+// so we don't use the stdlib.
+
+export function bitwise_and(x, y) {
+  return x & y;
+}
+
+export function bitwise_not(x) {
+  return ~x;
+}
+
+export function bitwise_or(x, y) {
+  return x | y;
+}
+
+export function bitwise_exclusive_or(x, y) {
+  return x ^ y;
+}
+
+export function bitwise_shift_left(x, y) {
+  return x << y;
+}
+
+export function bitwise_logical_shift_right(x, y) {
+  return x >>> y;
+}
+
 export function hashSha1(bitArray) {
   const msg = bitArray.rawBuffer;
   const msgLen = msg.length;
@@ -100,78 +129,4 @@ export function hashSha1(bitArray) {
       h4,
     ),
   );
-}
-
-const MD5_S = [
-  7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 5, 9, 14, 20, 5,
-  9, 14, 20, 5, 9, 14, 20, 5, 9, 14, 20, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11,
-  16, 23, 4, 11, 16, 23, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15,
-  21,
-];
-
-const MD5_K = Array.from({ length: 64 }, (_, i) =>
-  Math.floor(Math.abs(Math.sin(i + 1)) * 2 ** 32),
-);
-
-export function hashMd5(bitArray) {
-  const data = bitArray.rawBuffer;
-  const dataLen = data.length;
-  const dataBitLen = dataLen * 8;
-  const padded = new Uint8Array((dataLen + 9 + 63) & ~63);
-  padded.set(data);
-  padded[dataLen] = 0x80;
-  padded[padded.length - 8] = dataBitLen & 0xff;
-  padded[padded.length - 7] = (dataBitLen >>> 8) & 0xff;
-  padded[padded.length - 6] = (dataBitLen >>> 16) & 0xff;
-  padded[padded.length - 5] = (dataBitLen >>> 24) & 0xff;
-
-  let a = 0x67452301,
-    b = 0xefcdab89,
-    c = 0x98badcfe,
-    d = 0x10325476;
-
-  for (let i = 0; i < padded.length; i += 64) {
-    const x = new Uint32Array(padded.buffer, i, 16);
-    let aa = a,
-      bb = b,
-      cc = c,
-      dd = d;
-
-    for (let j = 0; j < 64; j++) {
-      let f, g;
-      if (j < 16) {
-        f = (b & c) | (~b & d);
-        g = j;
-      } else if (j < 32) {
-        f = (d & b) | (~d & c);
-        g = (5 * j + 1) % 16;
-      } else if (j < 48) {
-        f = b ^ c ^ d;
-        g = (3 * j + 5) % 16;
-      } else {
-        f = c ^ (b | ~d);
-        g = (7 * j) % 16;
-      }
-      const rotateAmount = MD5_S[j];
-      const sum = (a + f + MD5_K[j] + x[g]) >>> 0;
-      const oldD = d;
-      d = c;
-      c = b;
-      b = (b + ((sum << rotateAmount) | (sum >>> (32 - rotateAmount)))) >>> 0;
-      a = oldD;
-    }
-
-    a = (a + aa) >>> 0;
-    b = (b + bb) >>> 0;
-    c = (c + cc) >>> 0;
-    d = (d + dd) >>> 0;
-  }
-
-  const out = new Uint8Array(16);
-  const view = new DataView(out.buffer);
-  view.setUint32(0, a, true);
-  view.setUint32(4, b, true);
-  view.setUint32(8, c, true);
-  view.setUint32(12, d, true);
-  return new BitArray(out);
 }

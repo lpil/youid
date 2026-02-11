@@ -1,3 +1,5 @@
+import youid/internal/md5
+
 // gleam_crypto don't support browser
 @external(erlang, "crypto", "strong_rand_bytes")
 @external(javascript, "../../youid_ffi.mjs", "strongRandomBytes")
@@ -13,7 +15,6 @@ pub fn sha1_truncated_128(data: BitArray) -> BitArray {
 @external(javascript, "../../youid_ffi.mjs", "hashSha1")
 pub fn sha1(data: BitArray) -> BitArray
 
-// gleam_crypto don't support browser
-@external(erlang, "youid_ffi", "hash_md5")
-@external(javascript, "../../youid_ffi.mjs", "hashMd5")
-pub fn md5(data: BitArray) -> BitArray
+pub fn md5(data: BitArray) -> BitArray {
+  md5.md5(data)
+}
