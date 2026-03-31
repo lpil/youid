@@ -20,9 +20,41 @@ pub fn main() {
   uuid.to_string(id)
   // -> "019d449c-2c82-71bb-b4bf-6505df7ad7c2"
 
-  // Convert it a URL-safe compact text format, good for user interfaces
+  // Convert it to a compact text format, good for user interfaces
   uuid.to_base64(id)
   // -> "AZ1EnCyCcbu0v2UF33rXwg"
+
+  // Convert it to a compact tagged format, good for APIs
+  uuid.to_tagged(id, "order")
+  // -> "order_AZ1EnCyCcbu0v2UF33rXwg"
+}
+```
+
+In an API you may want to use the tagged id format, which is compact and has a
+tag prefix, making it easy to know what resource it is for.
+
+```gleam
+import app/userbase.{type User}
+import gleam/json.{type Json}
+import gleam/dynamic/decoder.{type Decoder}
+import tagged_id
+
+pub fn user_to_json(user: User) -> Json {
+  // Convert a UUID to the tagged-id format
+  let id = tagged_id.format(user.id, "user")
+
+  // You can use it in JSON, for example.
+  json.object([
+    #("id", json.string(id)),
+    #("name", json.string(name)),
+  ])
+}
+
+pub fn user_decoder() -> Decoder(User) {
+  // Decode an id in the tagged-id format
+  use id <- decode.field("id", tagged_id.decoder("user"))
+  use name <- decode.field("name", decode.string)
+  decode.success(User(id:, name:))
 }
 ```
 
