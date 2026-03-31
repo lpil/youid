@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.7.0 - 2026-03-31
+
+- Added `string_decoder`, `bit_array_decoder`, `base64_decoder`, `to_tagged`,
+  `from_tagged`, `tagged_decoder`.
+
 ## v1.6.0 - 2026-03-31
 
 - Added `to_base64` and `from_base64`.

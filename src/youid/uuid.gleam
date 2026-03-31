@@ -9,12 +9,15 @@
 //// Unless you have a specific reason otherwise, you probably want v7.
 
 import gleam/bit_array
+import gleam/bool
 import gleam/crypto
+import gleam/dynamic/decode.{type Decoder}
 import gleam/int
 import gleam/list
 import gleam/result
 import gleam/string
 import gleam/time/timestamp
+import justin
 
 // uuid's epoch is 15 Oct 1582, that's this many 100ns intervals until 1 Jan 1970.
 const ms_intervals_offset = 122_192_928_000_000
@@ -472,6 +475,16 @@ pub fn from_string(in: String) -> Result(Uuid, Nil) {
   }
 }
 
+/// Decode a UUID from the standard text formats supported by `from_string`.
+///
+pub fn string_decoder() -> Decoder(Uuid) {
+  use text <- decode.then(decode.string)
+  case from_string(text) {
+    Ok(uuid) -> decode.success(uuid)
+    Error(_) -> decode.failure(nil, "Uuid")
+  }
+}
+
 //
 // Builtin UUIDs
 //
@@ -509,7 +522,9 @@ pub fn to_bit_array(uuid: Uuid) -> BitArray {
 }
 
 /// Attemts to convert a bit array to a UUID.
+///
 /// Will fail if the bit array is not 16 bytes long or has an invalid version.
+///
 pub fn from_bit_array(bit_array: BitArray) -> Result(Uuid, Nil) {
   let uuid = Uuid(bit_array)
 
@@ -523,10 +538,20 @@ pub fn from_bit_array(bit_array: BitArray) -> Result(Uuid, Nil) {
   }
 }
 
+/// Decode a UUID from the binary format.
+///
+pub fn bit_array_decoder() -> Decoder(Uuid) {
+  use text <- decode.then(decode.bit_array)
+  case from_bit_array(text) {
+    Ok(uuid) -> decode.success(uuid)
+    Error(_) -> decode.failure(nil, "Uuid")
+  }
+}
+
 /// Convert a UUID to a URL-safe base-64 string.
 ///
 /// The output is 22 characters long and URL-safe, making it an ideal format
-/// for ids in paths and APIs.
+/// for ids in user interfaces.
 ///
 pub fn to_base64(uuid: Uuid) -> String {
   bit_array.base64_url_encode(uuid.value, False)
@@ -546,6 +571,64 @@ pub fn from_base64(in: String) -> Result(Uuid, Nil) {
   case bit_array.byte_size(bits) {
     16 -> Ok(Uuid(value: bits))
     _ -> Error(Nil)
+  }
+}
+
+/// Decode a UUID from the base64 text format.
+///
+pub fn base64_decoder() -> Decoder(Uuid) {
+  use text <- decode.then(decode.string)
+  case from_base64(text) {
+    Ok(uuid) -> decode.success(uuid)
+    Error(_) -> decode.failure(nil, "Base64Uuid")
+  }
+}
+
+/// Convert a UUID to the tagged text format.
+///
+/// A tagged id looks like `user_AZ1FdOAldmWkCW40uG23ig`. The prefix is a tag which
+/// makes clear what resource the id is for, and the suffix is a URL-safe base64
+/// encoded UUID.
+///
+/// You should use this in your public-facing API, but not in your data-store
+/// or other internal systems. Storing the binary UUID is more efficient, and
+/// Gleam's types make the tag redundant.
+///
+pub fn to_tagged(uuid: Uuid, tagging name: String) -> String {
+  name <> "_" <> to_base64(uuid)
+}
+
+/// Parse a UUID from the tagged text format.
+///
+/// If the tag does not match then it fails to parse.
+///
+pub fn from_tagged(input: String, tagged name: String) -> Result(Uuid, Nil) {
+  let size = string.byte_size(input)
+
+  // A base64 encoded UUID is 22 bytes, and another for an underscore.
+  let expected_size = string.byte_size(name) + 23
+
+  // If the size is incorrect then there's no point in parsing it.
+  use <- bool.guard(size != expected_size, Error(Nil))
+
+  // Remove the tag. Ideally this would use a prefix strip function, but the
+  // stdlib does not presently have it.
+  use #(_, input) <- result.try(string.split_once(input, name <> "_"))
+
+  from_base64(input)
+}
+
+/// Decode a UUID from the tagged text format.
+///
+/// You should use this in your public-facing API, but not in your data-store
+/// or other internal systems. Storing the binary UUID is more efficient, and
+/// Gleam's types make the tag redundant.
+///
+pub fn tagged_decoder(name: String) -> Decoder(Uuid) {
+  use text <- decode.then(decode.string)
+  case from_tagged(text, name) {
+    Ok(uuid) -> decode.success(uuid)
+    Error(_) -> decode.failure(nil, justin.pascal_case(name) <> "Id")
   }
 }
 
