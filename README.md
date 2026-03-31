@@ -20,7 +20,7 @@ pub fn main() {
   uuid.to_string(id)
   // -> "019d449c-2c82-71bb-b4bf-6505df7ad7c2"
 
-  // Convert it a URL-safe compact text format
+  // Convert it a URL-safe compact text format, good for user interfaces
   uuid.to_base64(id)
   // -> "AZ1EnCyCcbu0v2UF33rXwg"
 }
@@ -34,11 +34,10 @@ Spec: [https://www.ietf.org/rfc/rfc9562.txt](https://www.ietf.org/rfc/rfc9562.tx
 
 Wikipedia: [https://en.wikipedia.org/wiki/uuid](https://en.wikipedia.org/wiki/uuid)
 
-Unless you have a specific reason otherwise, you probably either want the
-random v4 or the time-based v1 or v7 versions.
+Unless you have a specific reason otherwise, you probably want v7.
 
 Further documentation can be found at <https://hexdocs.pm/youid>.
 
-Many thanks to Gregggreg for [the original version][original] of this library.
+Many thanks to Greggreg for [the original version][original] of this library.
 
 [original]: https://gitlab.com/greggreg/gleam_uuid

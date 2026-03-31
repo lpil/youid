@@ -1,4 +1,4 @@
-//// Spec conformant UUID v1, v3, v4, and v5 generation.
+//// Spec conformant UUID v1, v3, v4, v5, and v7 generation.
 ////
 //// Spec conformant UUID decoding for all versions and variants.
 ////
@@ -6,8 +6,7 @@
 ////
 //// Wikipedia: [https://en.wikipedia.org/wiki/uuid](https://en.wikipedia.org/wiki/uuid)
 ////
-//// Unless you have a specific reason otherwise, you probably either want the
-//// random v4 or the time-based v1 version.
+//// Unless you have a specific reason otherwise, you probably want v7.
 
 import gleam/bit_array
 import gleam/crypto
