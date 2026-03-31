@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.6.0 - 2026-03-31
+
+- Added `to_base64` and `from_base64`.
+
 ## v1.5.1 - 2025-07-02
 
 - Added support for the JavaScript target

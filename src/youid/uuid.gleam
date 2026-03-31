@@ -13,6 +13,7 @@ import gleam/bit_array
 import gleam/crypto
 import gleam/int
 import gleam/list
+import gleam/result
 import gleam/string
 import gleam/time/timestamp
 
@@ -519,6 +520,32 @@ pub fn from_bit_array(bit_array: BitArray) -> Result(Uuid, Nil) {
         VUnknown -> Error(Nil)
         _ -> Ok(uuid)
       }
+    _ -> Error(Nil)
+  }
+}
+
+/// Convert a UUID to a URL-safe base-64 string.
+///
+/// The output is 22 characters long and URL-safe, making it an ideal format
+/// for ids in paths and APIs.
+///
+pub fn to_base64(uuid: Uuid) -> String {
+  bit_array.base64_url_encode(uuid.value, False)
+}
+
+/// Attempt to decode a UUID from a URL-safe base-64 string.
+///
+/// Supports unpadded 22 character uuids and padded 24 character uuids.
+///
+pub fn from_base64(in: String) -> Result(Uuid, Nil) {
+  use padded <- result.try(case string.byte_size(in) {
+    22 -> Ok(in <> "==")
+    24 -> Ok(in)
+    _ -> Error(Nil)
+  })
+  use bits <- result.try(bit_array.base64_url_decode(padded))
+  case bit_array.byte_size(bits) {
+    16 -> Ok(Uuid(value: bits))
     _ -> Error(Nil)
   }
 }
