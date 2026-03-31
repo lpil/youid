@@ -463,3 +463,125 @@ pub fn nil_from_string_test() {
   uuid
   |> should.equal(uuid.nil)
 }
+
+pub fn v1_to_base64_test() {
+  let assert Ok(uuid) = uuid.from_string("49cac37c-310b-11eb-adc1-0242ac120002")
+  uuid
+  |> uuid.to_base64()
+  |> should.equal("ScrDfDELEeutwQJCrBIAAg")
+}
+
+pub fn v4_to_base64_test() {
+  let assert Ok(uuid) = uuid.from_string("16b53fc5-f9a7-4f6b-8180-399ab0986250")
+  uuid
+  |> uuid.to_base64()
+  |> should.equal("FrU_xfmnT2uBgDmasJhiUA")
+}
+
+pub fn v5_to_base64_test() {
+  let assert Ok(uuid) = uuid.from_string("016c25fd-70e0-56fe-9d1a-56e80fa20b82")
+  uuid
+  |> uuid.to_base64()
+  |> should.equal("AWwl_XDgVv6dGlboD6ILgg")
+}
+
+pub fn v7_to_base64_test() {
+  let assert Ok(uuid) = uuid.from_string("018ed16d-0f82-7d38-a8ad-31f11b97d10c")
+  uuid
+  |> uuid.to_base64()
+  |> should.equal("AY7RbQ-CfTiorTHxG5fRDA")
+}
+
+pub fn nil_to_base64_test() {
+  uuid.nil
+  |> uuid.to_base64()
+  |> should.equal("AAAAAAAAAAAAAAAAAAAAAA")
+}
+
+pub fn to_base64_is_22_chars_test() {
+  uuid.v4()
+  |> uuid.to_base64()
+  |> string.length()
+  |> should.equal(22)
+}
+
+pub fn v1_from_base64_test() {
+  "ScrDfDELEeutwQJCrBIAAg"
+  |> uuid.from_base64()
+  |> should.be_ok()
+  |> uuid.to_string()
+  |> should.equal("49cac37c-310b-11eb-adc1-0242ac120002")
+}
+
+pub fn v4_from_base64_test() {
+  "FrU_xfmnT2uBgDmasJhiUA"
+  |> uuid.from_base64()
+  |> should.be_ok()
+  |> uuid.version()
+  |> should.equal(uuid.V4)
+}
+
+pub fn v7_from_base64_test() {
+  "AY7RbQ-CfTiorTHxG5fRDA"
+  |> uuid.from_base64()
+  |> should.be_ok()
+  |> uuid.version()
+  |> should.equal(uuid.V7)
+}
+
+pub fn nil_from_base64_test() {
+  "AAAAAAAAAAAAAAAAAAAAAA"
+  |> uuid.from_base64()
+  |> should.be_ok()
+  |> should.equal(uuid.nil)
+}
+
+pub fn from_base64_with_padding_test() {
+  "ScrDfDELEeutwQJCrBIAAg=="
+  |> uuid.from_base64()
+  |> should.be_ok()
+  |> uuid.to_string()
+  |> should.equal("49cac37c-310b-11eb-adc1-0242ac120002")
+}
+
+pub fn from_base64_too_short_test() {
+  "ScrDfDELEeutwQJCrBIAA"
+  |> uuid.from_base64()
+  |> should.be_error()
+}
+
+pub fn from_base64_too_long_test() {
+  "ScrDfDELEeutwQJCrBIAAgg"
+  |> uuid.from_base64()
+  |> should.be_error()
+}
+
+pub fn from_base64_invalid_chars_test() {
+  "ScrDfDELEeutwQJCrBIA!!"
+  |> uuid.from_base64()
+  |> should.be_error()
+}
+
+pub fn base64_roundtrip_v4_test() {
+  let uuid = uuid.v4()
+  uuid
+  |> uuid.to_base64()
+  |> uuid.from_base64()
+  |> should.equal(Ok(uuid))
+}
+
+pub fn base64_roundtrip_v7_test() {
+  let uuid = uuid.v7()
+  uuid
+  |> uuid.to_base64()
+  |> uuid.from_base64()
+  |> should.equal(Ok(uuid))
+}
+
+pub fn base64_roundtrip_v1_test() {
+  let uuid = uuid.v1()
+  uuid
+  |> uuid.to_base64()
+  |> uuid.from_base64()
+  |> should.equal(Ok(uuid))
+}

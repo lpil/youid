@@ -13,8 +13,16 @@ gleam add youid
 import youid/uuid
 
 pub fn main() {
-  uuid.v4_string()
-  // -> "f55f6957-534b-45a7-af22-a1591431bc1f"
+  // Generate a universally-unique identifier
+  let id = uuid.v7()
+
+  // Convert it to the standard text format
+  uuid.to_string(id)
+  // -> "019d449c-2c82-71bb-b4bf-6505df7ad7c2"
+
+  // Convert it a URL-safe compact text format
+  uuid.to_base64(id)
+  // -> "AZ1EnCyCcbu0v2UF33rXwg"
 }
 ```
 
