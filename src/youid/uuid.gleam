@@ -9,12 +9,12 @@
 //// Unless you have a specific reason otherwise, you probably want v7.
 
 import gleam/bit_array
-import gleam/crypto
 import gleam/int
 import gleam/list
 import gleam/result
 import gleam/string
 import gleam/time/timestamp
+import youid/internal/crypto
 
 // uuid's epoch is 15 Oct 1582, that's this many 100ns intervals until 1 Jan 1970.
 const ms_intervals_offset = 122_192_928_000_000
@@ -207,16 +207,12 @@ pub fn v3(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
   case bit_array.bit_size(name) % 8 == 0 {
     True ->
       <<namespace.value:bits, name:bits>>
-      |> md5()
+      |> crypto.md5()
       |> hash_to_uuid_value(v3_version)
       |> Uuid
       |> Ok
     False -> Error(Nil)
   }
-}
-
-fn md5(data: BitArray) -> BitArray {
-  crypto.hash(crypto.Md5, data)
 }
 
 fn hash_to_uuid_value(hash: BitArray, ver: Int) -> BitArray {
@@ -267,17 +263,12 @@ pub fn v5(namespace: Uuid, name: BitArray) -> Result(Uuid, Nil) {
   case bit_array.bit_size(name) % 8 == 0 {
     True ->
       <<namespace.value:bits, name:bits>>
-      |> sha1()
+      |> crypto.sha1_truncated_128()
       |> hash_to_uuid_value(v5_version)
       |> Uuid
       |> Ok
     False -> Error(Nil)
   }
-}
-
-fn sha1(data: BitArray) -> BitArray {
-  let assert <<data:bits-size(128), _:32>> = crypto.hash(crypto.Sha1, data)
-  data
 }
 
 //
