@@ -1,5 +1,6 @@
-@target(erlang)
 import gleam/erlang/process
+@target(erlang)
+import gleam/int
 @target(erlang)
 import gleam/list
 
@@ -202,11 +203,11 @@ pub fn v1_posix_time_test() {
 @target(erlang)
 pub fn v1_generation_sequence_test() {
   let ids =
-    list.range(0, 1000)
-    |> list.map(fn(_) {
+    int.range(0, 1000, [], fn(acc, _) {
       process.sleep(1)
-      uuid.v1_string()
+      [uuid.v1_string(), ..acc]
     })
+    |> list.reverse
   let sorted = list.sort(ids, string.compare)
 
   sorted
@@ -406,11 +407,11 @@ pub fn v7_can_validate_self_test() {
 @target(erlang)
 pub fn v7_generation_sequence_test() {
   let ids =
-    list.range(0, 1000)
-    |> list.map(fn(_) {
+    int.range(0, 1000, [], fn(acc, _) {
       process.sleep(1)
-      uuid.v7_string()
+      [uuid.v7_string(), ..acc]
     })
+    |> list.reverse
   let sorted = list.sort(ids, string.compare)
 
   sorted
