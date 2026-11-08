@@ -242,11 +242,12 @@ fn hash_to_uuid_value(hash: BitArray, ver: Int) -> BitArray {
 //
 /// Generates a version 4 (random) UUID.
 pub fn v4() -> Uuid {
-  let assert <<a:size(48), _:size(4), b:size(12), _:size(2), c:size(62)>> =
+  let assert <<a:size(48), _:size(4), b:size(12), _:size(2), c:bits-size(62)>> =
     crypto.strong_random_bytes(16)
 
   let value = <<
-    a:size(48), v4_version:size(4), b:size(12), rfc_variant:size(2), c:size(62),
+    a:size(48), v4_version:size(4), b:size(12), rfc_variant:size(2),
+    c:bits-size(62),
   >>
 
   Uuid(value: value)
@@ -295,9 +296,15 @@ pub fn v7() -> Uuid {
 /// Creates a version 7 UUID from a specific UNIX timestamp.
 /// Integer should be milliseconds from UNIX epoch.
 pub fn v7_from_millisec(timestamp: Int) -> Uuid {
-  let assert <<a:size(12), b:size(62), _:size(6)>> =
+  let assert <<a:size(12), b:bits-size(62), _:size(6)>> =
     crypto.strong_random_bytes(10)
-  let value = <<timestamp:48, v7_version:4, a:12, rfc_variant:2, b:62>>
+  let value = <<
+    timestamp:48,
+    v7_version:4,
+    a:12,
+    rfc_variant:2,
+    b:bits-size(62),
+  >>
   Uuid(value: value)
 }
 
