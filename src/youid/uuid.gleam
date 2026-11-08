@@ -360,8 +360,9 @@ pub fn variant(uuid: Uuid) -> Variant {
 /// telling what time a UUID was created. See time_posix_microsec and clock_sequence.
 pub fn time(uuid: Uuid) -> Int {
   let assert <<t_low:32, t_mid:16, _:4, t_hi:12, _:64>> = uuid.value
-  let assert <<t:60>> = <<t_hi:12, t_mid:16, t_low:32>>
-  t
+  let shift_48 = 0x1_0000_0000_0000
+  let shift_32 = 0x1_0000_0000
+  t_hi * shift_48 + t_mid * shift_32 + t_low
 }
 
 /// Determine the time a UUID was created with.
