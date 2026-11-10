@@ -1,9 +1,11 @@
 # Changelog
 
-## v1.6.1 - 2026-11-09
+## v1.6.1 - 2026-11-10
 
-- Used bits-size for numbers too large for the JavaScript runtime to eliminate warnings.
-- Changed `time` to return timestamp as result of arithmetic bit shift to avoid warnings for JavaScript target.
+- Used bits-size for numbers too large for the JavaScript runtime to eliminate
+  warnings.
+- Changed `time` to return timestamp as result of arithmetic bit shift to avoid
+  warnings for JavaScript target.
 
 ## v1.6.0 - 2026-03-31
 
